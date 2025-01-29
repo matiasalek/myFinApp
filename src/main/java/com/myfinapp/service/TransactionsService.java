@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -19,6 +20,12 @@ public class TransactionsService {
     @Transactional(readOnly = true)
     public List<Transactions> getAllTransactions(){
         return transactionsRepository.findAll();
+    }
+
+
+    @Transactional(readOnly = true)
+    public Transactions getTransactionById(Long id) {
+        return transactionsRepository.findById(id).orElseThrow(()->new RuntimeException("Transaction not found"));
     }
 
 
