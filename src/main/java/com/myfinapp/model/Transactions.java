@@ -2,7 +2,7 @@ package com.myfinapp.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "transactions")
@@ -11,10 +11,12 @@ public class Transactions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String track_desc;
-    private String category;
-    private float value;
-    private Date date;
+    private Long user_id;
+    private Long category_id;
+    private String description;
+    private float amount;
+    private Timestamp date;
+    private boolean is_recurring;
 
     public Long getId() {
         return id;
@@ -24,35 +26,51 @@ public class Transactions {
         this.id = id;
     }
 
-    public String getTrack_desc() {
-        return track_desc;
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public void setTrackDesc(String track_desc) {
-        this.track_desc = track_desc;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategory_id() {
+        return category_id;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory_id(Long category_id) {
+        this.category_id = category_id;
     }
 
-    public float getValue() {
-        return value;
+    public String getDescription() {
+        return description;
     }
 
-    public void setValue(float value) {
-        this.value = value;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Date getDate() {
+    public float getAmount() {
+        return amount;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
+    }
+
+    public boolean isIs_recurring() {
+        return is_recurring;
+    }
+
+    public void setIs_recurring(boolean is_recurring) {
+        this.is_recurring = is_recurring;
     }
 }

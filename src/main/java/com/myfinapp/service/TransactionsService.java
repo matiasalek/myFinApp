@@ -24,10 +24,10 @@ public class TransactionsService {
 
     public Transactions updateFin(Long id, Transactions transactionsDetails) {
         return transactionsRepository.findById(id).map(transactions -> {
-            transactions.setTrackDesc(transactionsDetails.getTrack_desc());
-            transactions.setCategory(transactionsDetails.getCategory());
-            transactions.setValue(transactionsDetails.getValue());
+            transactions.setDescription(transactionsDetails.getDescription());
+            transactions.setAmount(transactionsDetails.getAmount());
             transactions.setDate(transactionsDetails.getDate());
+            transactions.setIs_recurring(transactionsDetails.isIs_recurring());
             return transactionsRepository.save(transactions);
         }).orElseThrow(()-> new RuntimeException("Fin not found"));
     }
