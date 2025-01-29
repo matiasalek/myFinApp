@@ -24,7 +24,7 @@ public class TransactionsService {
 
     public Transactions updateFin(Long id, Transactions transactionsDetails) {
         return transactionsRepository.findById(id).map(transactions -> {
-            transactions.setTrackDesc(transactionsDetails.getTrackDesc());
+            transactions.setTrackDesc(transactionsDetails.getTrack_desc());
             transactions.setCategory(transactionsDetails.getCategory());
             transactions.setValue(transactionsDetails.getValue());
             transactions.setDate(transactionsDetails.getDate());

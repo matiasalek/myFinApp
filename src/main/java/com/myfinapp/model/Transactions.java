@@ -11,7 +11,7 @@ public class Transactions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String trackDesc;
+    private String track_desc;
     private String category;
     private float value;
     private Date date;
@@ -24,12 +24,12 @@ public class Transactions {
         this.id = id;
     }
 
-    public String getTrackDesc() {
-        return trackDesc;
+    public String getTrack_desc() {
+        return track_desc;
     }
 
-    public void setTrackDesc(String trackDesc) {
-        this.trackDesc = trackDesc;
+    public void setTrackDesc(String track_desc) {
+        this.track_desc = track_desc;
     }
 
     public String getCategory() {
