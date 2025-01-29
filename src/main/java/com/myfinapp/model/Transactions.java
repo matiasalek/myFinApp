@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "transactions")
-public class Fin {
+public class Transactions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
