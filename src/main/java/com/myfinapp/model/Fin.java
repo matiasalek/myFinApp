@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "finapp")
+@Table(name = "transactions")
 public class Fin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
