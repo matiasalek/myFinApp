@@ -29,12 +29,12 @@ public class TransactionsService {
             transactions.setDate(transactionsDetails.getDate());
             transactions.setIs_recurring(transactionsDetails.isIs_recurring());
             return transactionsRepository.save(transactions);
-        }).orElseThrow(()-> new RuntimeException("Fin not found"));
+        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
     }
 
     public void deleteTransaction(Long id){
         Transactions transactions = transactionsRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Fin not found"));
+                .orElseThrow(()-> new RuntimeException("Transaction not found"));
         transactionsRepository.delete(transactions);
     }
 }
