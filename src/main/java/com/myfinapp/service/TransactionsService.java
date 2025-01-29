@@ -14,15 +14,15 @@ public class TransactionsService {
         this.transactionsRepository = transactionsRepository;
     }
 
-    public List<Transactions> getAllFins(){
+    public List<Transactions> getAllTransactions(){
         return transactionsRepository.findAll();
     }
 
-    public Transactions createFin(Transactions transactions){
+    public Transactions createTransaction(Transactions transactions){
         return transactionsRepository.save(transactions);
     }
 
-    public Transactions updateFin(Long id, Transactions transactionsDetails) {
+    public Transactions updateTransaction(Long id, Transactions transactionsDetails) {
         return transactionsRepository.findById(id).map(transactions -> {
             transactions.setDescription(transactionsDetails.getDescription());
             transactions.setAmount(transactionsDetails.getAmount());
@@ -32,7 +32,7 @@ public class TransactionsService {
         }).orElseThrow(()-> new RuntimeException("Fin not found"));
     }
 
-    public void deleteFin(Long id){
+    public void deleteTransaction(Long id){
         Transactions transactions = transactionsRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Fin not found"));
         transactionsRepository.delete(transactions);

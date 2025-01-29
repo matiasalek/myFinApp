@@ -20,25 +20,25 @@ public class TransactionsController {
     }
 
     @GetMapping
-    public List<Transactions> getAllFins() {
-        return transactionsService.getAllFins();
+    public List<Transactions> getAllTransactions() {
+        return transactionsService.getAllTransactions();
     }
 
     @PostMapping
-    public ResponseEntity<Transactions> createFin(@RequestBody Transactions transactions) {
-        Transactions createdTransactions = transactionsService.createFin(transactions);
+    public ResponseEntity<Transactions> createTransaction(@RequestBody Transactions transactions) {
+        Transactions createdTransactions = transactionsService.createTransaction(transactions);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTransactions);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Transactions> updateFin(@PathVariable Long id, @RequestBody Transactions transactionsDetails) {
-        Transactions updatedTransactions = transactionsService.updateFin(id, transactionsDetails);
+    public ResponseEntity<Transactions> updateTransaction(@PathVariable Long id, @RequestBody Transactions transactionsDetails) {
+        Transactions updatedTransactions = transactionsService.updateTransaction(id, transactionsDetails);
         return ResponseEntity.ok(updatedTransactions);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFin(@PathVariable Long id) {
-        transactionsService.deleteFin(id);
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+        transactionsService.deleteTransaction(id);
         return ResponseEntity.noContent().build(); // Return 204 No Content when successful
     }
 }
