@@ -3,9 +3,11 @@ package com.myfinapp.service;
 import com.myfinapp.model.RecurringTransactions;
 import com.myfinapp.repository.RecurringTransactionsRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service
 public class RecurringTransactionsService {
     private final RecurringTransactionsRepository recurringTransactionsRepository;
@@ -14,6 +16,7 @@ public class RecurringTransactionsService {
         this.recurringTransactionsRepository = recurringTransactionsRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<RecurringTransactions> getAllRecurringTransactions(){
         return recurringTransactionsRepository.findAll();
     }

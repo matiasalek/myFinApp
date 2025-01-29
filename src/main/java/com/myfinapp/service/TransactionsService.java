@@ -3,9 +3,11 @@ package com.myfinapp.service;
 import com.myfinapp.model.Transactions;
 import com.myfinapp.repository.TransactionsRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service
 public class TransactionsService {
     private final TransactionsRepository transactionsRepository;
@@ -14,9 +16,11 @@ public class TransactionsService {
         this.transactionsRepository = transactionsRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Transactions> getAllTransactions(){
         return transactionsRepository.findAll();
     }
+
 
     public Transactions createTransaction(Transactions transactions){
         return transactionsRepository.save(transactions);

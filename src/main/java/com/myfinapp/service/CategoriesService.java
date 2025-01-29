@@ -3,9 +3,11 @@ package com.myfinapp.service;
 import com.myfinapp.model.Categories;
 import com.myfinapp.repository.CategoriesRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service
 public class CategoriesService {
     private final CategoriesRepository categoriesRepository;
@@ -14,9 +16,11 @@ public class CategoriesService {
         this.categoriesRepository = categoriesRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Categories> getAllCategories(){
         return categoriesRepository.findAll();
     }
+
 
     public Categories createCategory(Categories categories){
         return categoriesRepository.save(categories);

@@ -3,8 +3,11 @@ package com.myfinapp.service;
 import com.myfinapp.model.Users;
 import com.myfinapp.repository.UsersRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
+@Transactional
 @Service
 public class UsersService {
     private final UsersRepository usersRepository;
@@ -13,6 +16,7 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Users> getAllUsers() {
         return usersRepository.findAll();
     }
