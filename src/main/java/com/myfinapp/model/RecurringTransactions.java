@@ -11,7 +11,9 @@ public class RecurringTransactions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long transaction_id;
+    @OneToOne
+    @JoinColumn(name = "transaction_id")
+    private Transactions transaction;
     private Timestamp paid_date;
     private boolean active;
     private Timestamp created_date;
@@ -24,19 +26,19 @@ public class RecurringTransactions {
         this.id = id;
     }
 
-    public Long getTransaction_id() {
-        return transaction_id;
+    public Transactions getTransaction() {
+        return transaction;
     }
 
-    public void setTransaction_id(Long transaction_id) {
-        this.transaction_id = transaction_id;
+    public void setTransaction(Transactions transaction) {
+        this.transaction = transaction;
     }
 
     public Timestamp getPaid_date() {
         return paid_date;
     }
 
-    public void setPaidDate(Timestamp paid_date) {
+    public void setPaid_date(Timestamp paid_date) {
         this.paid_date = paid_date;
     }
 

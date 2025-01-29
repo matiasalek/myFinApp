@@ -11,8 +11,15 @@ public class Transactions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long user_id;
-    private Long category_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Categories category;
+
+
     private String description;
     private float amount;
     private Timestamp date;
@@ -26,20 +33,20 @@ public class Transactions {
         this.id = id;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Users getUser() {
+        return user;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUser(Users user) {
+        this.user = user;
     }
 
-    public Long getCategory_id() {
-        return category_id;
+    public Categories getCategory() {
+        return category;
     }
 
-    public void setCategory_id(Long category_id) {
-        this.category_id = category_id;
+    public void setCategory(Categories category) {
+        this.category = category;
     }
 
     public String getDescription() {
