@@ -11,11 +11,11 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -23,7 +23,7 @@ public class Transaction {
     private String description;
     private float amount;
     private Timestamp date;
-    private boolean is_recurring;
+    private boolean recurring;
 
     public Long getId() {
         return id;
@@ -73,11 +73,11 @@ public class Transaction {
         this.date = date;
     }
 
-    public boolean isIs_recurring() {
-        return is_recurring;
+    public boolean IsRecurring() {
+        return recurring;
     }
 
-    public void setIs_recurring(boolean is_recurring) {
-        this.is_recurring = is_recurring;
+    public void setRecurring(boolean is_recurring) {
+        this.recurring = is_recurring;
     }
 }
