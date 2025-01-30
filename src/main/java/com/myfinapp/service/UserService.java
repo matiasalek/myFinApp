@@ -21,6 +21,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(()->new RuntimeException("Transaction not found"));
+    }
+
     public User createUser(User user) {
         return userRepository.save(user);
     }
