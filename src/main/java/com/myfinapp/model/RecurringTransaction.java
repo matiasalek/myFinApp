@@ -6,14 +6,14 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "recurring_transactions")
-public class RecurringTransactions {
+public class RecurringTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "transaction_id")
-    private Transactions transaction;
+    private Transaction transaction;
     private Timestamp paid_date;
     private boolean active;
     private Timestamp created_date;
@@ -26,11 +26,11 @@ public class RecurringTransactions {
         this.id = id;
     }
 
-    public Transactions getTransaction() {
+    public Transaction getTransaction() {
         return transaction;
     }
 
-    public void setTransaction(Transactions transaction) {
+    public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
     }
 
