@@ -1,7 +1,6 @@
 package com.myfinapp.controller;
 
 import com.myfinapp.model.RecurringTransaction;
-import com.myfinapp.repository.RecurringTransactionRepository;
 import com.myfinapp.service.RecurringTransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +12,9 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class RecurringTransactionController {
     private final RecurringTransactionService recurringTransactionService;
-    private final RecurringTransactionRepository recurringTransactionRepository;
 
-    public RecurringTransactionController(RecurringTransactionService recurringTransactionService, RecurringTransactionRepository recurringTransactionRepository){
+    public RecurringTransactionController(RecurringTransactionService recurringTransactionService){
         this.recurringTransactionService = recurringTransactionService;
-        this.recurringTransactionRepository = recurringTransactionRepository;
     }
 
     @GetMapping
@@ -27,8 +24,7 @@ public class RecurringTransactionController {
 
     @GetMapping("/{id}")
     public RecurringTransaction getRecurringTransactionById(@PathVariable Long id){
-        RecurringTransaction recurringTransaction = recurringTransactionRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("User not found"));
+        RecurringTransaction recurringTransaction = recurringTransactionService.getRecurringTransactionById(id);
         return ResponseEntity.ok(recurringTransaction).getBody();
     }
 

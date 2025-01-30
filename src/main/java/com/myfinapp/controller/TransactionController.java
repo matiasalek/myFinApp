@@ -1,7 +1,6 @@
 package com.myfinapp.controller;
 
 import com.myfinapp.model.Transaction;
-import com.myfinapp.repository.TransactionRepository;
 import com.myfinapp.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +12,10 @@ import java.util.List;
 @RequestMapping("/api/transaction")
 public class TransactionController {
     private final TransactionService transactionService;
-    private final TransactionRepository transactionRepository;
 
     // Constructor-based dependency injection
-    public TransactionController(TransactionService transactionService, TransactionRepository transactionRepository) {
+    public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
-        this.transactionRepository = transactionRepository;
     }
 
     @GetMapping
@@ -28,8 +25,7 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     public Transaction getTransactionById(@PathVariable Long id){
-        Transaction transaction = transactionRepository.findById(id)
-            .orElseThrow(()->new RuntimeException("Transaction not found"));
+        Transaction transaction = transactionService.getTransactionById(id);
         return ResponseEntity.ok(transaction).getBody();
     }
 

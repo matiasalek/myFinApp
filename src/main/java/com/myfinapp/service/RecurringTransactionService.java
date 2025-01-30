@@ -21,6 +21,12 @@ public class RecurringTransactionService {
         return recurringTransactionRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public RecurringTransaction getRecurringTransactionById(Long id) {
+        return recurringTransactionRepository.findById(id).orElseThrow(()->new RuntimeException("Transaction not found"));
+    }
+
+
     public RecurringTransaction createRecurringTransaction(RecurringTransaction recurringTransaction){
         return recurringTransactionRepository.save(recurringTransaction);
     }

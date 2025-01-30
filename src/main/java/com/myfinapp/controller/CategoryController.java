@@ -2,7 +2,6 @@ package com.myfinapp.controller;
 
 
 import com.myfinapp.model.Category;
-import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +13,9 @@ import java.util.List;
 @RequestMapping("/api/category")
 public class CategoryController {
     private final CategoryService categoryService;
-    private final CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryService categoryService, CategoryRepository categoryRepository){
+    public CategoryController(CategoryService categoryService){
         this.categoryService = categoryService;
-        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping
@@ -28,8 +25,7 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public Category getCategoryById(@PathVariable Long id){
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("User not found"));
+        Category category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category).getBody();
     }
 
@@ -37,5 +33,17 @@ public class CategoryController {
     public ResponseEntity<Category> createCategory(@RequestBody Category category){
         Category createdCategory = categoryService.createCategory(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
+        Category updatedCategory = categoryService.updateCategory(id, categoryDetails);
+        return ResponseEntity.ok(updatedCategory);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,7 +1,6 @@
 package com.myfinapp.controller;
 
 import com.myfinapp.model.User;
-import com.myfinapp.repository.UserRepository;
 import com.myfinapp.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +12,9 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
-    private final UserRepository userRepository;
 
-    public UserController(UserService userService, UserRepository userRepository){
+    public UserController(UserService userService){
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -27,8 +24,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id){
-        User user = userRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("User not found"));
+        User user = userService.getUserById(id);
         return ResponseEntity.ok(user).getBody();
     }
 
