@@ -40,8 +40,6 @@ public class TransactionController {
         if (transaction.getCategory().getId() == null) {
             categoryRepository.save(transaction.getCategory());
         }
-
-        // Make sure user exists, or save it if needed
         if (transaction.getUser().getId() == null) {
             userRepository.save(transaction.getUser());
         }
