@@ -2,7 +2,6 @@ package com.myfinapp.controller;
 
 import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.CategoryRepository;
-import com.myfinapp.repository.UserRepository;
 import com.myfinapp.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +14,11 @@ import java.util.List;
 public class TransactionController {
     private final TransactionService transactionService;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
 
     // Constructor-based dependency injection
-    public TransactionController(TransactionService transactionService, CategoryRepository categoryRepository, UserRepository userRepository) {
+    public TransactionController(TransactionService transactionService, CategoryRepository categoryRepository) {
         this.transactionService = transactionService;
         this.categoryRepository = categoryRepository;
-        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -39,9 +36,6 @@ public class TransactionController {
     public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) {
         if (transaction.getCategory().getId() == null) {
             categoryRepository.save(transaction.getCategory());
-        }
-        if (transaction.getUser().getId() == null) {
-            userRepository.save(transaction.getUser());
         }
 
         Transaction createdTransaction = transactionService.createTransaction(transaction);
