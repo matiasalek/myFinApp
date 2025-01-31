@@ -2,7 +2,8 @@ package com.myfinapp.model;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")
@@ -11,14 +12,14 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
 
     private String description;
-    private float amount;
-    private Timestamp date;
+    private BigDecimal amount;
+    private LocalDateTime date;
     private boolean recurring;
 
     public Long getId() {
@@ -45,23 +46,23 @@ public class Transaction {
         this.description = description;
     }
 
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public Timestamp getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
-    public boolean IsRecurring() {
+    public boolean isRecurring() {
         return recurring;
     }
 

@@ -37,7 +37,7 @@ public class TransactionService {
             transaction.setDescription(transactionDetails.getDescription());
             transaction.setAmount(transactionDetails.getAmount());
             transaction.setDate(transactionDetails.getDate());
-            transaction.setRecurring(transactionDetails.IsRecurring());
+            transaction.setRecurring(transactionDetails.isRecurring());
             return transactionRepository.save(transaction);
         }).orElseThrow(()-> new RuntimeException("Transaction not found"));
     }
