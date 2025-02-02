@@ -44,9 +44,37 @@ public class TransactionService {
         }).orElseThrow(()-> new RuntimeException("Transaction not found"));
     }
 
+    public Transaction updateCategoryTransaction(Long id, Transaction transactionDetails) {
+        return transactionRepository.findById(id).map(transaction -> {
+            transaction.setCategory(transactionDetails.getCategory());
+            return transactionRepository.save(transaction);
+        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
+    }
+
+    public Transaction updateDescriptionTransaction(Long id, Transaction transactionDetails) {
+        return transactionRepository.findById(id).map(transaction -> {
+            transaction.setDescription(transactionDetails.getDescription());
+            return transactionRepository.save(transaction);
+        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
+    }
+
     public Transaction updateAmountTransaction(Long id, Transaction transactionDetails) {
         return transactionRepository.findById(id).map(transaction -> {
             transaction.setAmount(transactionDetails.getAmount());
+            return transactionRepository.save(transaction);
+        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
+    }
+
+    public Transaction updateDateTransaction(Long id, Transaction transactionDetails) {
+        return transactionRepository.findById(id).map(transaction -> {
+            transaction.setDate(transactionDetails.getDate());
+            return transactionRepository.save(transaction);
+        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
+    }
+
+    public Transaction updateRecurringTransaction(Long id, Transaction transactionDetails) {
+        return transactionRepository.findById(id).map(transaction -> {
+            transaction.setRecurring(transactionDetails.isRecurring());
             return transactionRepository.save(transaction);
         }).orElseThrow(()-> new RuntimeException("Transaction not found"));
     }

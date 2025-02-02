@@ -49,10 +49,38 @@ public class TransactionController {
         return ResponseEntity.ok(updatedTransaction);
     }
 
+    // Update the category of the transaction
+    @PutMapping("/{id}")
+    public ResponseEntity<Transaction> updateCategoryTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
+        Transaction updatedTransaction = transactionService.updateCategoryTransaction(id, transactionDetails);
+        return ResponseEntity.ok(updatedTransaction);
+    }
+
+    // Update the description of the transaction
+    @PutMapping("/{id}")
+    public ResponseEntity<Transaction> updateDescriptionTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
+        Transaction updatedTransaction = transactionService.updateDescriptionTransaction(id, transactionDetails);
+        return ResponseEntity.ok(updatedTransaction);
+    }
+
     // Update the amount of the transaction
     @PutMapping("/{id}")
     public ResponseEntity<Transaction> updateAmountTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
         Transaction updatedTransaction = transactionService.updateAmountTransaction(id, transactionDetails);
+        return ResponseEntity.ok(updatedTransaction);
+    }
+
+    // Update the date of the transaction
+    @PutMapping("/{id}")
+    public ResponseEntity<Transaction> updateDateTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
+        Transaction updatedTransaction = transactionService.updateDateTransaction(id, transactionDetails);
+        return ResponseEntity.ok(updatedTransaction);
+    }
+
+    // Update the recurring state of the transaction
+    @PutMapping("/{id}")
+    public ResponseEntity<Transaction> updateRecurringTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
+        Transaction updatedTransaction = transactionService.updateRecurringTransaction(id, transactionDetails);
         return ResponseEntity.ok(updatedTransaction);
     }
 
