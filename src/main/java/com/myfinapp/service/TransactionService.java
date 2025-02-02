@@ -5,6 +5,7 @@ import com.myfinapp.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.RuntimeErrorException;
 import java.util.List;
 
 @Transactional
@@ -32,12 +33,20 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    public Transaction updateTransaction(Long id, Transaction transactionDetails) {
+    public Transaction updateFullTransaction(Long id, Transaction transactionDetails) {
         return transactionRepository.findById(id).map(transaction -> {
+            transaction.setCategory(transactionDetails.getCategory());
             transaction.setDescription(transactionDetails.getDescription());
             transaction.setAmount(transactionDetails.getAmount());
             transaction.setDate(transactionDetails.getDate());
             transaction.setRecurring(transactionDetails.isRecurring());
+            return transactionRepository.save(transaction);
+        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
+    }
+
+    public Transaction updateAmountTransaction(Long id, Transaction transactionDetails) {
+        return transactionRepository.findById(id).map(transaction -> {
+            transaction.setAmount(transactionDetails.getAmount());
             return transactionRepository.save(transaction);
         }).orElseThrow(()-> new RuntimeException("Transaction not found"));
     }

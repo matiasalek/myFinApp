@@ -42,9 +42,17 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTransaction);
     }
 
+    // Update the whole transaction (Category, Description, Amount, Date and Recurring)
     @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction updatedTransaction = transactionService.updateTransaction(id, transactionDetails);
+    public ResponseEntity<Transaction> updateFullTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
+        Transaction updatedTransaction = transactionService.updateFullTransaction(id, transactionDetails);
+        return ResponseEntity.ok(updatedTransaction);
+    }
+
+    // Update the amount of the transaction
+    @PutMapping("/{id}")
+    public ResponseEntity<Transaction> updateAmountTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
+        Transaction updatedTransaction = transactionService.updateAmountTransaction(id, transactionDetails);
         return ResponseEntity.ok(updatedTransaction);
     }
 
