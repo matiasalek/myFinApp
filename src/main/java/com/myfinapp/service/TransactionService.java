@@ -1,12 +1,16 @@
 package com.myfinapp.service;
 
+import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.RuntimeErrorException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service
@@ -33,7 +37,7 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    public Transaction updateFullTransaction(Long id, Transaction transactionDetails) {
+    public Transaction updateTransaction(Long id, Transaction transactionDetails) {
         return transactionRepository.findById(id).map(transaction -> {
             transaction.setCategory(transactionDetails.getCategory());
             transaction.setDescription(transactionDetails.getDescription());
@@ -44,37 +48,27 @@ public class TransactionService {
         }).orElseThrow(()-> new RuntimeException("Transaction not found"));
     }
 
-    public Transaction updateCategoryTransaction(Long id, Transaction transactionDetails) {
+    public Transaction patchTransaction(Long id, Map<String, Object> updates){
         return transactionRepository.findById(id).map(transaction -> {
-            transaction.setCategory(transactionDetails.getCategory());
-            return transactionRepository.save(transaction);
-        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
-    }
-
-    public Transaction updateDescriptionTransaction(Long id, Transaction transactionDetails) {
-        return transactionRepository.findById(id).map(transaction -> {
-            transaction.setDescription(transactionDetails.getDescription());
-            return transactionRepository.save(transaction);
-        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
-    }
-
-    public Transaction updateAmountTransaction(Long id, Transaction transactionDetails) {
-        return transactionRepository.findById(id).map(transaction -> {
-            transaction.setAmount(transactionDetails.getAmount());
-            return transactionRepository.save(transaction);
-        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
-    }
-
-    public Transaction updateDateTransaction(Long id, Transaction transactionDetails) {
-        return transactionRepository.findById(id).map(transaction -> {
-            transaction.setDate(transactionDetails.getDate());
-            return transactionRepository.save(transaction);
-        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
-    }
-
-    public Transaction updateRecurringTransaction(Long id, Transaction transactionDetails) {
-        return transactionRepository.findById(id).map(transaction -> {
-            transaction.setRecurring(transactionDetails.isRecurring());
+            updates.forEach((key, value) ->{
+                switch (key) {
+                    case "category":
+                        transaction.setCategory((Category) value);
+                        break;
+                    case "description":
+                        transaction.setDescription((String) value);
+                        break;
+                    case "amount":
+                        transaction.setAmount((BigDecimal) value);
+                        break;
+                    case "date":
+                        transaction.setDate((LocalDateTime) value);
+                        break;
+                    case "recurring":
+                        transaction.setRecurring((Boolean) value);
+                        break;
+                }
+            });
             return transactionRepository.save(transaction);
         }).orElseThrow(()-> new RuntimeException("Transaction not found"));
     }

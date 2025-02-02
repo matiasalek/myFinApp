@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/transaction")
@@ -44,45 +45,17 @@ public class TransactionController {
 
     // Update the whole transaction (Category, Description, Amount, Date and Recurring)
     @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateFullTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction updatedTransaction = transactionService.updateFullTransaction(id, transactionDetails);
+    public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
+        Transaction updatedTransaction = transactionService.updateTransaction(id, transactionDetails);
         return ResponseEntity.ok(updatedTransaction);
     }
 
-    // Update the category of the transaction
-    @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateCategoryTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction updatedTransaction = transactionService.updateCategoryTransaction(id, transactionDetails);
-        return ResponseEntity.ok(updatedTransaction);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Transaction> patchTransaction(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        Transaction patchedTransaction = transactionService.patchTransaction(id, updates);
+        return ResponseEntity.ok(patchedTransaction);
     }
 
-    // Update the description of the transaction
-    @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateDescriptionTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction updatedTransaction = transactionService.updateDescriptionTransaction(id, transactionDetails);
-        return ResponseEntity.ok(updatedTransaction);
-    }
-
-    // Update the amount of the transaction
-    @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateAmountTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction updatedTransaction = transactionService.updateAmountTransaction(id, transactionDetails);
-        return ResponseEntity.ok(updatedTransaction);
-    }
-
-    // Update the date of the transaction
-    @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateDateTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction updatedTransaction = transactionService.updateDateTransaction(id, transactionDetails);
-        return ResponseEntity.ok(updatedTransaction);
-    }
-
-    // Update the recurring state of the transaction
-    @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateRecurringTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction updatedTransaction = transactionService.updateRecurringTransaction(id, transactionDetails);
-        return ResponseEntity.ok(updatedTransaction);
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
