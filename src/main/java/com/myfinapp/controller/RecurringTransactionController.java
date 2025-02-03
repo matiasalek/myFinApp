@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/recurringtransaction")
@@ -38,6 +39,12 @@ public class RecurringTransactionController {
     public ResponseEntity<RecurringTransaction> updateRecurringTransaction(@PathVariable Long id, @RequestBody RecurringTransaction recurringTransactionDetails) {
         RecurringTransaction updatedRecurringTransaction = recurringTransactionService.updateRecurringTransaction(id, recurringTransactionDetails);
         return ResponseEntity.ok(updatedRecurringTransaction);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<RecurringTransaction> patchRecurringTransaction(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        RecurringTransaction patchedRecurringTransaction = recurringTransactionService.patchRecurringTransaction(id, updates);
+        return ResponseEntity.ok(patchedRecurringTransaction);
     }
 
     @DeleteMapping("/{id}")

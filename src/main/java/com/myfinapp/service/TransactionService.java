@@ -50,9 +50,6 @@ public class TransactionService {
         return transactionRepository.findById(id).map(transaction -> {
             updates.forEach((key, value) ->{
                 switch (key) {
-                    case "category":
-                        transaction.setCategory((Category) value);
-                        break;
                     case "description":
                         transaction.setDescription((String) value);
                         break;

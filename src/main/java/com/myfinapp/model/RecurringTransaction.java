@@ -3,6 +3,7 @@ package com.myfinapp.model;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "recurring_transactions")
@@ -14,9 +15,9 @@ public class RecurringTransaction {
     @OneToOne
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
-    private Timestamp paid_date;
+    private LocalDateTime paid_date;
     private boolean active;
-    private Timestamp created_date;
+    private LocalDateTime created_date;
 
     public Long getId() {
         return id;
@@ -34,11 +35,11 @@ public class RecurringTransaction {
         this.transaction = transaction;
     }
 
-    public Timestamp getPaid_date() {
+    public LocalDateTime getPaid_date() {
         return paid_date;
     }
 
-    public void setPaid_date(Timestamp paid_date) {
+    public void setPaid_date(LocalDateTime paid_date) {
         this.paid_date = paid_date;
     }
 
@@ -50,11 +51,11 @@ public class RecurringTransaction {
         this.active = active;
     }
 
-    public Timestamp getCreated_date() {
+    public LocalDateTime getCreated_date() {
         return created_date;
     }
 
-    public void setCreated_date(Timestamp created_date) {
+    public void setCreated_date(LocalDateTime created_date) {
         this.created_date = created_date;
     }
 }
