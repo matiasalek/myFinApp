@@ -11,8 +11,17 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "name")
+    private categories name;
+
     private Timestamp date;
+
+    public enum categories{
+        FOOD,
+        CREDIT_CARD,
+        RECURRING_SPENDS,
+    }
 
     public Timestamp getDate() {
         return date;
@@ -22,11 +31,11 @@ public class Category {
         this.date = date;
     }
 
-    public String getName() {
+    public categories getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(categories name) {
         this.name = name;
     }
 
