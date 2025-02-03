@@ -26,12 +26,10 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
-
     @Transactional(readOnly = true)
     public Transaction getTransactionById(Long id) {
         return transactionRepository.findById(id).orElseThrow(()->new RuntimeException("Transaction not found"));
     }
-
 
     public Transaction createTransaction(Transaction transaction){
         return transactionRepository.save(transaction);

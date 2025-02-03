@@ -16,7 +16,6 @@ public class Transaction {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-
     private String description;
     private BigDecimal amount;
     private LocalDateTime date;

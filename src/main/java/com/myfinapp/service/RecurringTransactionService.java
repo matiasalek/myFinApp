@@ -26,13 +26,10 @@ public class RecurringTransactionService {
         return recurringTransactionRepository.findById(id).orElseThrow(()->new RuntimeException("Transaction not found"));
     }
 
-
     public RecurringTransaction createRecurringTransaction(RecurringTransaction recurringTransaction){
         return recurringTransactionRepository.save(recurringTransaction);
     }
 
-
-    //how to handle ids?
     public RecurringTransaction updateRecurringTransaction(Long id, RecurringTransaction recurringTransactionDetails){
         return recurringTransactionRepository.findById(id).map(recurringTransaction -> {
             recurringTransaction.setCreated_date(recurringTransactionDetails.getCreated_date());

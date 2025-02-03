@@ -16,7 +16,6 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final CategoryRepository categoryRepository;
 
-    // Constructor-based dependency injection
     public TransactionController(TransactionService transactionService, CategoryRepository categoryRepository) {
         this.transactionService = transactionService;
         this.categoryRepository = categoryRepository;
@@ -43,7 +42,6 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTransaction);
     }
 
-    // Update the whole transaction (Category, Description, Amount, Date and Recurring)
     @PutMapping("/{id}")
     public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
         Transaction updatedTransaction = transactionService.updateTransaction(id, transactionDetails);
@@ -55,7 +53,6 @@ public class TransactionController {
         Transaction patchedTransaction = transactionService.patchTransaction(id, updates);
         return ResponseEntity.ok(patchedTransaction);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
