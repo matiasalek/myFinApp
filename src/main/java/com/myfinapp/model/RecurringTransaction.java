@@ -13,10 +13,16 @@ public class RecurringTransaction {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "transaction_id")
+    @JoinColumn(name = "transaction_id", nullable = false)
     private Transaction transaction;
+
+    @Column(nullable = false)
     private LocalDateTime paid_date;
+
+    @Column(nullable = false)
     private boolean active;
+
+    @Column(nullable = false)
     private LocalDateTime created_date;
 
     public Long getId() {

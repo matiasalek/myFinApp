@@ -15,6 +15,7 @@ public class Category {
     @Column(name = "name", nullable = false)
     private categories name;
 
+    @Column(nullable = false)
     private Timestamp date;
 
     public enum categories{

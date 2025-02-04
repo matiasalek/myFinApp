@@ -16,9 +16,16 @@ public class Transaction {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
     private BigDecimal amount;
+
+    @Column(nullable = false)
     private LocalDateTime date;
+
+    @Column(nullable = false)
     private boolean recurring;
 
     public Long getId() {
