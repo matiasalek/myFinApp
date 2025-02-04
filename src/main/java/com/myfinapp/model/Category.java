@@ -12,15 +12,16 @@ public class Category {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private categories name;
 
     private Timestamp date;
 
     public enum categories{
-        FOOD,
+        MISC,
         CREDIT_CARD,
         RECURRING_SPENDS,
+        SAVING
     }
 
     public Timestamp getDate() {
