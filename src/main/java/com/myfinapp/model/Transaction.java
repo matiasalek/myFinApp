@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "transactions")
@@ -27,6 +28,9 @@ public class Transaction {
 
     @Column(nullable = false)
     private boolean recurring;
+
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecurringTransaction> recurringTransactionList;
 
     public Long getId() {
         return id;
@@ -72,7 +76,15 @@ public class Transaction {
         return recurring;
     }
 
-    public void setRecurring(boolean is_recurring) {
-        this.recurring = is_recurring;
+    public void setRecurring(boolean recurring) {
+        this.recurring = recurring;
+    }
+
+    public List<RecurringTransaction> getRecurringTransactionList() {
+        return recurringTransactionList;
+    }
+
+    public void setRecurringTransactionList(List<RecurringTransaction> recurringTransactionList) {
+        this.recurringTransactionList = recurringTransactionList;
     }
 }
