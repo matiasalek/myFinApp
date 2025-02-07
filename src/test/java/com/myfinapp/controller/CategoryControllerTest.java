@@ -12,13 +12,16 @@ import org.springframework.http.ResponseEntity;
 import java.sql.Timestamp;
 
 import static com.myfinapp.model.Category.categories.MISC;
-import static org.assertj.core.api.Assertions.as;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class CategoryControllerTest {
+    // Arrange-Act-Assert pattern
+    // Arrange: set up test data -> when x is called, return x
+    // Act: Performs the actual operation to be tested
+    // Assert: Checks if the result is what is expected
+
     @Mock
     private CategoryService categoryService;
 
