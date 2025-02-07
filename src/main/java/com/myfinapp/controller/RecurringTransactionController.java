@@ -24,9 +24,9 @@ public class RecurringTransactionController {
     }
 
     @GetMapping("/{id}")
-    public RecurringTransaction getRecurringTransactionById(@PathVariable Long id){
+    public ResponseEntity<RecurringTransaction> getRecurringTransactionById(@PathVariable Long id){
         RecurringTransaction recurringTransaction = recurringTransactionService.getRecurringTransactionById(id);
-        return ResponseEntity.ok(recurringTransaction).getBody();
+        return ResponseEntity.ok(recurringTransaction);
     }
 
     @PostMapping

@@ -27,9 +27,9 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
-    public Transaction getTransactionById(@PathVariable Long id){
+    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id){
         Transaction transaction = transactionService.getTransactionById(id);
-        return ResponseEntity.ok(transaction).getBody();
+        return ResponseEntity.ok(transaction);
     }
 
     @PostMapping
