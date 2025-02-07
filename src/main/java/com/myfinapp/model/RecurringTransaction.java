@@ -25,6 +25,19 @@ public class RecurringTransaction {
     @Column(nullable = false)
     private LocalDateTime created_date;
 
+    // Empty constructor for JPA
+    public RecurringTransaction() {
+    }
+
+    // Full constructor for easy testing
+    public RecurringTransaction(Long id, Transaction transaction, LocalDateTime paid_date, boolean active, LocalDateTime created_date) {
+        this.id = id;
+        this.transaction = transaction;
+        this.paid_date = paid_date;
+        this.active = active;
+        this.created_date = created_date;
+    }
+
     public Long getId() {
         return id;
     }

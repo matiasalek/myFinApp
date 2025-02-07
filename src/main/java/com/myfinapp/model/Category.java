@@ -25,6 +25,17 @@ public class Category {
         SAVING
     }
 
+    // Empty constructor for JPA
+    public Category() {
+    }
+
+    // Full constructor for easy testing
+    public Category(Long id, categories name, Timestamp date) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+    }
+
     public Timestamp getDate() {
         return date;
     }
