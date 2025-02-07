@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import java.sql.Timestamp;
 
 import static com.myfinapp.model.Category.categories.MISC;
+import static org.assertj.core.api.Assertions.as;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,4 +41,46 @@ public class CategoryControllerTest {
         assertThat(response.getBody()).isEqualTo(expectedCategory);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+    @Test
+    void createCategory_ShouldCreateCategory() {
+        Long categoryId = 3L;
+        Timestamp ts = Timestamp.valueOf("2024-07-15 14:30:00");
+        Category expectedNewCategory = new Category(categoryId, MISC, ts);
+        when(categoryService.createCategory(expectedNewCategory)).thenReturn(expectedNewCategory);
+
+        ResponseEntity<Category> response = categoryController.createCategory(expectedNewCategory);
+
+        assertThat(response.getBody()).isEqualTo(expectedNewCategory);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void updateCategory_ShouldUpdateCategory() {
+        Long categoryId = 1L;
+        Category updatedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
+        when(categoryService.updateCategory(categoryId, updatedCategory)).thenReturn(updatedCategory);
+
+        ResponseEntity<Category> response = categoryController.updateCategory(categoryId, updatedCategory);
+
+        assertThat(response.getBody()).isEqualTo(updatedCategory);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(categoryService).updateCategory(categoryId, updatedCategory);
+    }
+
+    /*
+    Should write some exceptions
+    @Test
+    void updateCategory_WhenCategoryNotFound_ShouldReturnNotFound() {
+        Long categoryId = 999L;
+        Category updatedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
+
+        when(categoryService.updateCategory(categoryId, updatedCategory)).thenThrow(
+                new RuntimeException("Category not found"));
+
+
+        ResponseEntity<Category> response = categoryController.updateCategory(categoryId, updatedCategory);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+     */
 }
