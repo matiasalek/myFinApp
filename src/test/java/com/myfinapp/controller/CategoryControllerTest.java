@@ -57,16 +57,18 @@ public class CategoryControllerTest {
 
     @Test
     void createCategory_ShouldCreateCategory() throws Exception {
-        Long categoryId = 3L;
         Timestamp ts = Timestamp.valueOf("2024-07-15 14:30:00");
-        Category expectedNewCategory = new Category(categoryId, MISC, ts);
+
+        Category inputCategory = new Category(null, MISC, ts);
+        Category expectedNewCategory = new Category(3L, MISC, ts);
+
         when(categoryService.createCategory(any(Category.class))).thenReturn(expectedNewCategory);
 
-        mockMvc.perform(post("/api/category/")
+        mockMvc.perform(post("/api/category")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(expectedNewCategory)))
+                        .content(asJsonString(inputCategory)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(categoryId))
+                .andExpect(jsonPath("$.id").value(3L))
                 .andExpect(jsonPath("$.name").value(MISC.toString()))
                 .andExpect(jsonPath("$.date").exists());
     }

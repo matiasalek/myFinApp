@@ -29,13 +29,16 @@ public class CategoryService {
     }
 
     public Category createCategory(Category category){
-        if (category.getId() != null && categoryRepository.existsById(category.getId())) {
+        if (category.getId() != null) {
             throw new ResourceNotFoundException("Category already exists");
         }
         return categoryRepository.save(category);
     }
 
     public Category updateCategory(Long id, Category categoryDetails){
+        if (!categoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Category not found");
+        }
         return categoryRepository.findById(id)
                 .map(category -> {
                     category.setName(categoryDetails.getName());
