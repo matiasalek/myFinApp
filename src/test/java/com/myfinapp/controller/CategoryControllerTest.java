@@ -2,6 +2,7 @@ package com.myfinapp.controller;
 
 import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
+import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.service.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,9 @@ public class CategoryControllerTest {
     // Assert: Checks if the result is what is expected
     @Mock
     private CategoryService categoryService;
+
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @InjectMocks
     private CategoryController categoryController;
@@ -94,8 +98,7 @@ public class CategoryControllerTest {
     void deleteCategory_WhenCategoryNotFound_ShouldReturnNotFound() {
         Long categoryId = 999L;
 
-        doThrow(new ResourceNotFoundException("Category not found"))
-                .when(categoryService).deleteCategory(categoryId);
+        when(categoryRepository.existsById(categoryId)).thenReturn(false);
 
         ResponseEntity<Void> response = categoryController.deleteCategory(categoryId);
 

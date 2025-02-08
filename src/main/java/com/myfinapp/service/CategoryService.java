@@ -40,7 +40,9 @@ public class CategoryService {
     }
 
     public void deleteCategory(Long id){
-        Category category = categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Category not found"));
-        categoryRepository.delete(category);
+        if (!categoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Category not found");
+        }
+        categoryRepository.deleteById(id);
     }
 }
