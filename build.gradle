@@ -24,6 +24,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.0'
+
 	// Db
 	implementation 'org.postgresql:postgresql:42.7.2'
 

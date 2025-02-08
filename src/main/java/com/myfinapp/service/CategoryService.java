@@ -6,7 +6,9 @@ import com.myfinapp.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service
@@ -46,6 +48,22 @@ public class CategoryService {
                     return categoryRepository.save(category);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+    }
+
+    public Category patchCategory(Long id, Map<String, Object> updates) {
+        return categoryRepository.findById(id).map(category -> {
+            updates.forEach((key, value) -> {
+                switch (key) {
+                    case "name":
+                        category.setName(Category.categories.valueOf((String) value));
+                        break;
+                    case "date":
+                        category.setDate((LocalDateTime) value);
+                        break;
+                }
+            });
+            return categoryRepository.save(category);
+        }).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 
     public void deleteCategory(Long id){

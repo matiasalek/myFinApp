@@ -1,15 +1,14 @@
 package com.myfinapp.controller;
 
 
-import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
 import com.myfinapp.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/category")
@@ -43,6 +42,11 @@ public class CategoryController {
         return ResponseEntity.ok(updatedCategory);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Category> patchCategory(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        Category patchedCategory = categoryService.patchCategory(id, updates);
+        return ResponseEntity.ok(patchedCategory);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {

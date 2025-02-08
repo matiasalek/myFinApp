@@ -39,12 +39,8 @@ public class RecurringTransactionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<RecurringTransaction> updateRecurringTransaction(@PathVariable Long id, @RequestBody RecurringTransaction recurringTransactionDetails) {
-        try {
-            RecurringTransaction updatedRecurringTransaction = recurringTransactionService.updateRecurringTransaction(id, recurringTransactionDetails);
-            return ResponseEntity.ok(updatedRecurringTransaction);
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        RecurringTransaction updatedRecurringTransaction = recurringTransactionService.updateRecurringTransaction(id, recurringTransactionDetails);
+        return ResponseEntity.ok(updatedRecurringTransaction);
     }
 
     @PatchMapping("/{id}")

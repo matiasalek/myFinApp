@@ -26,19 +26,28 @@ public class RecurringTransactionService {
 
     @Transactional(readOnly = true)
     public RecurringTransaction getRecurringTransactionById(Long id) {
-        return recurringTransactionRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Transaction not found"));
+        return recurringTransactionRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Transaction not found"));
     }
 
     public RecurringTransaction createRecurringTransaction(RecurringTransaction recurringTransaction){
+        if (recurringTransaction.getId() != null) {
+            throw new ResourceNotFoundException("Recurring Transaction already exists");
+        }
         return recurringTransactionRepository.save(recurringTransaction);
     }
 
     public RecurringTransaction updateRecurringTransaction(Long id, RecurringTransaction recurringTransactionDetails){
-        return recurringTransactionRepository.findById(id).map(recurringTransaction -> {
-            recurringTransaction.setCreated_date(recurringTransactionDetails.getCreated_date());
-            recurringTransaction.setActive(recurringTransactionDetails.isActive());
-            return recurringTransactionRepository.save(recurringTransaction);
-        }).orElseThrow(()->new ResourceNotFoundException("Recurrent Transaction not found"));
+        if (!recurringTransactionRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurring Transaction not found");
+        }
+        return recurringTransactionRepository.findById(id)
+                .map(recurringTransaction -> {
+                    recurringTransaction.setCreated_date(recurringTransactionDetails.getCreated_date());
+                    recurringTransaction.setActive(recurringTransactionDetails.isActive());
+                    return recurringTransactionRepository.save(recurringTransaction);
+        })
+                .orElseThrow(()->new ResourceNotFoundException("Recurrent Transaction not found"));
     }
 
     public RecurringTransaction patchRecurringTransaction(Long id, Map<String, Object> updates) {
@@ -60,8 +69,9 @@ public class RecurringTransactionService {
     }
 
     public void deleteRecurringTransaction(Long id){
-        RecurringTransaction recurringTransaction = recurringTransactionRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Recurrent Transaction not found"));
-        recurringTransactionRepository.delete(recurringTransaction);
+        if (!recurringTransactionRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurring Transaction not found");
+        }
+        recurringTransactionRepository.deleteById(id);
     }
 }

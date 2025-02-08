@@ -1,5 +1,6 @@
 package com.myfinapp.controller;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.myfinapp.exception.GlobalExceptionHandler;
 import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
@@ -13,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import static com.myfinapp.model.Category.categories.MISC;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -45,7 +48,7 @@ public class CategoryControllerTest {
     @Test
     void getAllCategories_ShouldReturnAllCategories() throws Exception {
         Long categoryId = 1L;
-        Category expectedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
+        Category expectedCategory = new Category(categoryId, MISC, LocalDateTime.now());
         when(categoryService.getCategoryById(categoryId)).thenReturn(expectedCategory);
 
         mockMvc.perform(get("/api/category/" + categoryId))
@@ -57,10 +60,8 @@ public class CategoryControllerTest {
 
     @Test
     void createCategory_ShouldCreateCategory() throws Exception {
-        Timestamp ts = Timestamp.valueOf("2024-07-15 14:30:00");
-
-        Category inputCategory = new Category(null, MISC, ts);
-        Category expectedNewCategory = new Category(3L, MISC, ts);
+        Category inputCategory = new Category(null, MISC, LocalDateTime.now());
+        Category expectedNewCategory = new Category(3L, MISC, LocalDateTime.now());
 
         when(categoryService.createCategory(any(Category.class))).thenReturn(expectedNewCategory);
 
@@ -76,7 +77,7 @@ public class CategoryControllerTest {
     @Test
     void updateCategory_ShouldUpdateCategory() throws Exception {
         Long categoryId = 1L;
-        Category updatedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
+        Category updatedCategory = new Category(categoryId, MISC, LocalDateTime.now());
         when(categoryService.updateCategory(eq(categoryId), any(Category.class))).thenReturn(updatedCategory);
 
         mockMvc.perform(put("/api/category/" + categoryId)
@@ -91,7 +92,7 @@ public class CategoryControllerTest {
     @Test
     void updateCategory_WhenCategoryNotFound_ShouldReturnNotFound() throws Exception {
         Long categoryId = 999L;
-        Category updatedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
+        Category updatedCategory = new Category(categoryId, MISC,LocalDateTime.now());
 
         when(categoryService.updateCategory(eq(categoryId), any(Category.class)))
                 .thenThrow(new ResourceNotFoundException("Category not found"));
@@ -127,7 +128,9 @@ public class CategoryControllerTest {
 
     private static String asJsonString(final Object obj) {
         try {
-            return new ObjectMapper().writeValueAsString(obj);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

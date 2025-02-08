@@ -2,7 +2,7 @@ package com.myfinapp.model;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "categories")
@@ -16,7 +16,7 @@ public class Category {
     private categories name;
 
     @Column(nullable = false)
-    private Timestamp date;
+    private LocalDateTime date;
 
     public enum categories{
         MISC,
@@ -30,17 +30,17 @@ public class Category {
     }
 
     // Full constructor for easy testing
-    public Category(Long id, categories name, Timestamp date) {
+    public Category(Long id, categories name, LocalDateTime date) {
         this.id = id;
         this.name = name;
         this.date = date;
     }
 
-    public Timestamp getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
