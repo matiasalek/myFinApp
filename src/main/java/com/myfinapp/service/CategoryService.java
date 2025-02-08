@@ -1,7 +1,7 @@
 package com.myfinapp.service;
 
+import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
-import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(()->new RuntimeException("Transaction not found"));
+        return categoryRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Transaction not found"));
     }
 
     public Category createCategory(Category category){
@@ -36,11 +36,11 @@ public class CategoryService {
             category.setName(categoryDetails.getName());
             category.setDate(categoryDetails.getDate());
             return categoryRepository.save(category);
-        }).orElseThrow(()-> new RuntimeException("Category not found"));
+        }).orElseThrow(()-> new ResourceNotFoundException("Category not found"));
     }
 
     public void deleteCategory(Long id){
-        Category category = categoryRepository.findById(id).orElseThrow(()-> new RuntimeException("Category not found"));
+        Category category = categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Category not found"));
         categoryRepository.delete(category);
     }
 }

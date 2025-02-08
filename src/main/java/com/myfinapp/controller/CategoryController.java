@@ -1,6 +1,7 @@
 package com.myfinapp.controller;
 
 
+import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
 import com.myfinapp.service.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,12 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
-        Category updatedCategory = categoryService.updateCategory(id, categoryDetails);
-        return ResponseEntity.ok(updatedCategory);
+        try {
+            Category updatedCategory = categoryService.updateCategory(id, categoryDetails);
+            return ResponseEntity.ok(updatedCategory);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/{id}")

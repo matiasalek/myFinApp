@@ -1,5 +1,6 @@
 package com.myfinapp.controller;
 
+import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
 import com.myfinapp.service.CategoryService;
 import org.junit.jupiter.api.Test;
@@ -10,9 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.sql.Timestamp;
-
 import static com.myfinapp.model.Category.categories.MISC;
-import static org.assertj.core.api.Assertions.as;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,19 +67,17 @@ public class CategoryControllerTest {
         verify(categoryService).updateCategory(categoryId, updatedCategory);
     }
 
-    /*
-    Should write some exceptions
+
     @Test
     void updateCategory_WhenCategoryNotFound_ShouldReturnNotFound() {
         Long categoryId = 999L;
         Category updatedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
 
         when(categoryService.updateCategory(categoryId, updatedCategory)).thenThrow(
-                new RuntimeException("Category not found"));
+                new ResourceNotFoundException("Category not found"));
 
 
         ResponseEntity<Category> response = categoryController.updateCategory(categoryId, updatedCategory);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
-     */
 }

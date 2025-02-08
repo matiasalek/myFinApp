@@ -1,5 +1,7 @@
 package com.myfinapp.controller;
 
+import com.myfinapp.exception.ResourceNotFoundException;
+import com.myfinapp.model.Category;
 import com.myfinapp.model.RecurringTransaction;
 import com.myfinapp.service.RecurringTransactionService;
 import org.springframework.http.HttpStatus;
@@ -37,8 +39,12 @@ public class RecurringTransactionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<RecurringTransaction> updateRecurringTransaction(@PathVariable Long id, @RequestBody RecurringTransaction recurringTransactionDetails) {
-        RecurringTransaction updatedRecurringTransaction = recurringTransactionService.updateRecurringTransaction(id, recurringTransactionDetails);
-        return ResponseEntity.ok(updatedRecurringTransaction);
+        try {
+            RecurringTransaction updatedRecurringTransaction = recurringTransactionService.updateRecurringTransaction(id, recurringTransactionDetails);
+            return ResponseEntity.ok(updatedRecurringTransaction);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PatchMapping("/{id}")

@@ -1,12 +1,11 @@
 package com.myfinapp.service;
 
-import com.myfinapp.model.Category;
+import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.management.RuntimeErrorException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +27,7 @@ public class TransactionService {
 
     @Transactional(readOnly = true)
     public Transaction getTransactionById(Long id) {
-        return transactionRepository.findById(id).orElseThrow(()->new RuntimeException("Transaction not found"));
+        return transactionRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Transaction not found"));
     }
 
     public Transaction createTransaction(Transaction transaction){
@@ -43,7 +42,7 @@ public class TransactionService {
             transaction.setDate(transactionDetails.getDate());
             transaction.setRecurring(transactionDetails.isRecurring());
             return transactionRepository.save(transaction);
-        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
+        }).orElseThrow(()-> new ResourceNotFoundException("Transaction not found"));
     }
 
     public Transaction patchTransaction(Long id, Map<String, Object> updates){
@@ -65,12 +64,12 @@ public class TransactionService {
                 }
             });
             return transactionRepository.save(transaction);
-        }).orElseThrow(()-> new RuntimeException("Transaction not found"));
+        }).orElseThrow(()-> new ResourceNotFoundException("Transaction not found"));
     }
 
     public void deleteTransaction(Long id){
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Transaction not found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Transaction not found"));
         transactionRepository.delete(transaction);
     }
 }

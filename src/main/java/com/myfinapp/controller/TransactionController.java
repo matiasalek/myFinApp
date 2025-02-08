@@ -1,5 +1,7 @@
 package com.myfinapp.controller;
 
+import com.myfinapp.exception.ResourceNotFoundException;
+import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.service.TransactionService;
@@ -44,8 +46,12 @@ public class TransactionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction updatedTransaction = transactionService.updateTransaction(id, transactionDetails);
-        return ResponseEntity.ok(updatedTransaction);
+        try {
+            Transaction updatedTransaction = transactionService.updateTransaction(id, transactionDetails);
+            return ResponseEntity.ok(updatedTransaction);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PatchMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.myfinapp.service;
 
+import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.RecurringTransaction;
 import com.myfinapp.repository.RecurringTransactionRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class RecurringTransactionService {
 
     @Transactional(readOnly = true)
     public RecurringTransaction getRecurringTransactionById(Long id) {
-        return recurringTransactionRepository.findById(id).orElseThrow(()->new RuntimeException("Transaction not found"));
+        return recurringTransactionRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Transaction not found"));
     }
 
     public RecurringTransaction createRecurringTransaction(RecurringTransaction recurringTransaction){
@@ -37,7 +38,7 @@ public class RecurringTransactionService {
             recurringTransaction.setCreated_date(recurringTransactionDetails.getCreated_date());
             recurringTransaction.setActive(recurringTransactionDetails.isActive());
             return recurringTransactionRepository.save(recurringTransaction);
-        }).orElseThrow(()->new RuntimeException("Recurrent Transaction not found"));
+        }).orElseThrow(()->new ResourceNotFoundException("Recurrent Transaction not found"));
     }
 
     public RecurringTransaction patchRecurringTransaction(Long id, Map<String, Object> updates) {
@@ -55,12 +56,12 @@ public class RecurringTransactionService {
                 }
             });
             return recurringTransactionRepository.save(recurringTransaction);
-        }).orElseThrow(() -> new RuntimeException("Transaction not found"));
+        }).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
     }
 
     public void deleteRecurringTransaction(Long id){
         RecurringTransaction recurringTransaction = recurringTransactionRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Recurrent Transaction not found"));
+                .orElseThrow(()->new ResourceNotFoundException("Recurrent Transaction not found"));
         recurringTransactionRepository.delete(recurringTransaction);
     }
 }
