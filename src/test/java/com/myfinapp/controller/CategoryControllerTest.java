@@ -14,9 +14,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.sql.Timestamp;
 import static com.myfinapp.model.Category.categories.MISC;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CategoryControllerTest {
@@ -78,6 +77,27 @@ public class CategoryControllerTest {
                 .thenThrow(new ResourceNotFoundException("Category not found"));
 
         ResponseEntity<Category> response = categoryController.updateCategory(categoryId, updatedCategory);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void deleteCategory_ShouldDeleteCategory() {
+        Long categoryId = 1L;
+        ResponseEntity<Void> response = categoryController.deleteCategory(categoryId);
+
+        verify(categoryService, times(1)).deleteCategory(categoryId);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void deleteCategory_WhenCategoryNotFound_ShouldReturnNotFound() {
+        Long categoryId = 999L;
+
+        doThrow(new ResourceNotFoundException("Category not found"))
+                .when(categoryService).deleteCategory(categoryId);
+
+        ResponseEntity<Void> response = categoryController.deleteCategory(categoryId);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
