@@ -1,105 +1,133 @@
 package com.myfinapp.controller;
 
+import com.myfinapp.exception.GlobalExceptionHandler;
 import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
 import com.myfinapp.service.CategoryService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.sql.Timestamp;
 import static com.myfinapp.model.Category.categories.MISC;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 public class CategoryControllerTest {
-    // Arrange-Act-Assert pattern
-    // Arrange: set up test data -> when x is called, return x
-    // Act: Performs the actual operation to be tested
-    // Assert: Checks if the result is what is expected
     @Mock
     private CategoryService categoryService;
 
     @InjectMocks
     private CategoryController categoryController;
 
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
+    }
+
     @Test
-    void getAllCategories_ShouldReturnAllCategories() {
+    void getAllCategories_ShouldReturnAllCategories() throws Exception {
         Long categoryId = 1L;
         Category expectedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
         when(categoryService.getCategoryById(categoryId)).thenReturn(expectedCategory);
 
-        ResponseEntity<Category> response = categoryController.getCategoryById(categoryId);
-
-        assertThat(response.getBody()).isEqualTo(expectedCategory);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        mockMvc.perform(get("/api/category/" + categoryId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(categoryId))
+                .andExpect(jsonPath("$.name").value(MISC.toString()))
+                .andExpect(jsonPath("$.date").exists());
     }
 
     @Test
-    void createCategory_ShouldCreateCategory() {
+    void createCategory_ShouldCreateCategory() throws Exception {
         Long categoryId = 3L;
         Timestamp ts = Timestamp.valueOf("2024-07-15 14:30:00");
         Category expectedNewCategory = new Category(categoryId, MISC, ts);
-        when(categoryService.createCategory(expectedNewCategory)).thenReturn(expectedNewCategory);
+        when(categoryService.createCategory(any(Category.class))).thenReturn(expectedNewCategory);
 
-        ResponseEntity<Category> response = categoryController.createCategory(expectedNewCategory);
-
-        assertThat(response.getBody()).isEqualTo(expectedNewCategory);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        mockMvc.perform(post("/api/category/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(expectedNewCategory)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(categoryId))
+                .andExpect(jsonPath("$.name").value(MISC.toString()))
+                .andExpect(jsonPath("$.date").exists());
     }
 
     @Test
-    void updateCategory_ShouldUpdateCategory() {
+    void updateCategory_ShouldUpdateCategory() throws Exception {
         Long categoryId = 1L;
         Category updatedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
-        when(categoryService.updateCategory(categoryId, updatedCategory)).thenReturn(updatedCategory);
+        when(categoryService.updateCategory(eq(categoryId), any(Category.class))).thenReturn(updatedCategory);
 
-        ResponseEntity<Category> response = categoryController.updateCategory(categoryId, updatedCategory);
-
-        assertThat(response.getBody()).isEqualTo(updatedCategory);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(categoryService).updateCategory(categoryId, updatedCategory);
+        mockMvc.perform(put("/api/category/" + categoryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(updatedCategory)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(categoryId))
+                .andExpect(jsonPath("$.name").value(MISC.toString()))
+                .andExpect(jsonPath("$.date").exists());
     }
 
-
     @Test
-    void updateCategory_WhenCategoryNotFound_ShouldReturnNotFound() {
+    void updateCategory_WhenCategoryNotFound_ShouldReturnNotFound() throws Exception {
         Long categoryId = 999L;
         Category updatedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
 
-        when(categoryService.updateCategory(Mockito.eq(categoryId), Mockito.any()))
+        when(categoryService.updateCategory(eq(categoryId), any(Category.class)))
                 .thenThrow(new ResourceNotFoundException("Category not found"));
 
-        ResponseEntity<Category> response = categoryController.updateCategory(categoryId, updatedCategory);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        mockMvc.perform(put("/api/category/" + categoryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(updatedCategory)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Category not found"));
     }
 
     @Test
-    void deleteCategory_ShouldDeleteCategory() {
+    void deleteCategory_ShouldDeleteCategory() throws Exception {
         Long categoryId = 1L;
-        ResponseEntity<Void> response = categoryController.deleteCategory(categoryId);
+
+        mockMvc.perform(delete("/api/category/" + categoryId))
+                .andExpect(status().isNoContent());
 
         verify(categoryService, times(1)).deleteCategory(categoryId);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
-    /*
+
     @Test
-    void deleteCategory_WhenCategoryNotFound_ShouldReturnNotFound() {
+    void deleteCategory_WhenCategoryNotFound_ShouldReturnNotFound() throws Exception {
         Long categoryId = 999L;
 
-        when(categoryRepository.existsById(categoryId)).thenReturn(false);
+        doThrow(new ResourceNotFoundException("Category not found"))
+                .when(categoryService).deleteCategory(categoryId);
 
-        ResponseEntity<Void> response = categoryController.deleteCategory(categoryId);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        mockMvc.perform(delete("/api/category/" + categoryId))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Category not found"));
     }
-    
-     */
+
+    private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

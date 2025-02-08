@@ -24,19 +24,25 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Transaction not found"));
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 
     public Category createCategory(Category category){
+        if (category.getId() != null && categoryRepository.existsById(category.getId())) {
+            throw new ResourceNotFoundException("Category already exists");
+        }
         return categoryRepository.save(category);
     }
 
     public Category updateCategory(Long id, Category categoryDetails){
-        return categoryRepository.findById(id).map(category -> {
-            category.setName(categoryDetails.getName());
-            category.setDate(categoryDetails.getDate());
-            return categoryRepository.save(category);
-        }).orElseThrow(()-> new ResourceNotFoundException("Category not found"));
+        return categoryRepository.findById(id)
+                .map(category -> {
+                    category.setName(categoryDetails.getName());
+                    category.setDate(categoryDetails.getDate());
+                    return categoryRepository.save(category);
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 
     public void deleteCategory(Long id){
