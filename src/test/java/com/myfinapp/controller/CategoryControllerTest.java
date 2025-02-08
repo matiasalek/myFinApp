@@ -7,9 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import java.sql.Timestamp;
 import static com.myfinapp.model.Category.categories.MISC;
 import static org.mockito.Mockito.verify;
@@ -22,7 +24,6 @@ public class CategoryControllerTest {
     // Arrange: set up test data -> when x is called, return x
     // Act: Performs the actual operation to be tested
     // Assert: Checks if the result is what is expected
-
     @Mock
     private CategoryService categoryService;
 
@@ -73,11 +74,11 @@ public class CategoryControllerTest {
         Long categoryId = 999L;
         Category updatedCategory = new Category(categoryId, MISC, Timestamp.valueOf("2024-07-15 14:30:00"));
 
-        when(categoryService.updateCategory(categoryId, updatedCategory)).thenThrow(
-                new ResourceNotFoundException("Category not found"));
-
+        when(categoryService.updateCategory(Mockito.eq(categoryId), Mockito.any()))
+                .thenThrow(new ResourceNotFoundException("Category not found"));
 
         ResponseEntity<Category> response = categoryController.updateCategory(categoryId, updatedCategory);
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
