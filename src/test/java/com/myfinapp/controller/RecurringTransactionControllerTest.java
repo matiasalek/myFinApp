@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.myfinapp.model.Category.categories.MISC;
 import static org.mockito.Mockito.*;
@@ -65,7 +66,7 @@ public class RecurringTransactionControllerTest {
         );
 
         when(recurringTransactionService.getAllRecurringTransaction())
-                .thenReturn(Arrays.asList(expectedRecurringTransaction));
+                .thenReturn(List.of(expectedRecurringTransaction));
 
         mockMvc.perform(get("/api/recurringtransaction"))
                 .andExpect(status().isOk())
@@ -125,7 +126,7 @@ public class RecurringTransactionControllerTest {
                 recurringTransactionId,
                 testTransaction,
                 now,
-                false,  // changed active status
+                false,
                 now
         );
 

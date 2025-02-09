@@ -35,6 +35,9 @@ public class TransactionService {
     }
 
     public Transaction updateTransaction(Long id, Transaction transactionDetails) {
+        if (!transactionRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Transaction not found");
+        }
         return transactionRepository.findById(id).map(transaction -> {
             transaction.setCategory(transactionDetails.getCategory());
             transaction.setDescription(transactionDetails.getDescription());
@@ -42,7 +45,8 @@ public class TransactionService {
             transaction.setDate(transactionDetails.getDate());
             transaction.setRecurring(transactionDetails.isRecurring());
             return transactionRepository.save(transaction);
-        }).orElseThrow(()-> new ResourceNotFoundException("Transaction not found"));
+        })
+                .orElseThrow(()-> new ResourceNotFoundException("Transaction not found"));
     }
 
     public Transaction patchTransaction(Long id, Map<String, Object> updates){
