@@ -31,6 +31,9 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(Transaction transaction){
+        if (transaction.getId() != null) {
+            throw new ResourceNotFoundException("Transaction already exists");
+        }
         return transactionRepository.save(transaction);
     }
 
@@ -72,8 +75,9 @@ public class TransactionService {
     }
 
     public void deleteTransaction(Long id){
-        Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Transaction not found"));
-        transactionRepository.delete(transaction);
+        if (!transactionRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Transaction not found");
+        }
+        transactionRepository.deleteById(id);
     }
 }

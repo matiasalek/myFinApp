@@ -1,7 +1,5 @@
 package com.myfinapp.controller;
 
-import com.myfinapp.exception.ResourceNotFoundException;
-import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.service.TransactionService;

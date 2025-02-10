@@ -1,7 +1,5 @@
 package com.myfinapp.controller;
 
-import com.myfinapp.exception.ResourceNotFoundException;
-import com.myfinapp.model.Category;
 import com.myfinapp.model.RecurringTransaction;
 import com.myfinapp.service.RecurringTransactionService;
 import org.springframework.http.HttpStatus;

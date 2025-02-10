@@ -3,7 +3,6 @@ package com.myfinapp.service;
 import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
 import com.myfinapp.repository.CategoryRepository;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
