@@ -3,7 +3,6 @@ package com.myfinapp.service;
 import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
-import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,10 +69,8 @@ public class TransactionServiceTest {
 
         when(transactionRepository.save(any(Transaction.class))).thenReturn(savedTransaction);
 
-        // Act
         Transaction created = transactionService.createTransaction(newTransaction);
 
-        // Assert
         assertNotNull(created);
         assertEquals(1L, created.getId());
         verify(transactionRepository, times(1)).save(any(Transaction.class));
