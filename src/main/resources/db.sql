@@ -47,4 +47,3 @@ create table recurring_transactions
 
 alter table recurring_transactions
     owner to postgres;
-
