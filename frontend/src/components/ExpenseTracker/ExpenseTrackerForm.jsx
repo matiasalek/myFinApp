@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
-import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/components/ui/calendar';
+import { Button } from '@/components/components/ui/button';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
+} from '@/components/components/ui/select';
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
     CardFooter,
-} from '@/components/ui/card';
+} from '@/components/components/ui/card';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
+} from '@/components/components/ui/popover';
+import { Input } from '@/components/components/ui/input';
 import { CalendarIcon } from 'lucide-react';
 import { EXPENSE_CATEGORIES } from './constants';
 import { formatDate } from './utils';
@@ -37,7 +37,7 @@ const ExpenseTrackerForm = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="flex items-center justify-center min-h-screen bg-slate-900">
             <Card className="w-full max-w-md mx-4">
                 <CardHeader>
                     <CardTitle className="text-2xl font-medium text-center">
