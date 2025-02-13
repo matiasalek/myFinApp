@@ -23,13 +23,11 @@ import {
 import { Input } from '@/components/components/ui/input';
 import { CalendarIcon } from 'lucide-react';
 import { formatDate } from './utils';
-//import { addExpense } from '@/components/lib/api.js';
 
 const ExpenseTrackerForm = () => {
     const [date, setDate] = useState(new Date());
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
-    const [recurring, setRecurring] = useState('false');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
 
@@ -52,7 +50,6 @@ const ExpenseTrackerForm = () => {
                 description,
                 amount: parseFloat(amount),
                 dateTime: date.toISOString(),
-                recurring: recurring === 'true'
             };
 
             const response = await fetch('http://localhost:8080/api/transaction', {
@@ -67,12 +64,9 @@ const ExpenseTrackerForm = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            //await addExpense(transactionData);
-
             setDescription('');
             setAmount('');
             setDate(new Date());
-            setRecurring('false');
             setMessage({ text: 'Transaction added successfully!', type: 'success' });
         } catch (error) {
             setMessage({ text: 'Failed to add transaction. Please try again.', type: 'error' });
@@ -151,19 +145,6 @@ const ExpenseTrackerForm = () => {
                                     required
                                 />
                             </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Recurring</label>
-                            <Select value={recurring} onValueChange={setRecurring}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Is this a recurring transaction?" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="false">No</SelectItem>
-                                    <SelectItem value="true">Yes</SelectItem>
-                                </SelectContent>
-                            </Select>
                         </div>
                     </form>
                 </CardContent>
