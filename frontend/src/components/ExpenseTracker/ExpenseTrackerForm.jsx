@@ -22,32 +22,89 @@ import {
 } from '@/components/components/ui/popover';
 import { Input } from '@/components/components/ui/input';
 import { CalendarIcon } from 'lucide-react';
-import { EXPENSE_CATEGORIES } from './constants';
 import { formatDate } from './utils';
+//import { addExpense } from '@/components/lib/api.js';
 
 const ExpenseTrackerForm = () => {
     const [date, setDate] = useState(new Date());
-    const [category, setCategory] = useState('');
+    const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
+    const [recurring, setRecurring] = useState('false');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [message, setMessage] = useState({ text: '', type: '' });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you would integrate with your Spring Boot backend
-        console.log({ date, category, amount });
+
+        // Clear previous messages
+        setMessage({ text: '', type: '' });
+
+        // Basic validation
+        if (!description || !amount) {
+            setMessage({ text: 'Please fill in all fields', type: 'error' });
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            const transactionData = {
+                description,
+                amount: parseFloat(amount),
+                dateTime: date.toISOString(),
+                recurring: recurring === 'true'
+            };
+
+            const response = await fetch('http://localhost:8080/api/transaction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(transactionData),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            //await addExpense(transactionData);
+
+            setDescription('');
+            setAmount('');
+            setDate(new Date());
+            setRecurring('false');
+            setMessage({ text: 'Transaction added successfully!', type: 'success' });
+        } catch (error) {
+            setMessage({ text: 'Failed to add transaction. Please try again.', type: 'error' });
+            console.error('Error:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-900">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
             <Card className="w-full max-w-md mx-4">
                 <CardHeader>
                     <CardTitle className="text-2xl font-medium text-center">
-                        Track Expense
+                        Add Transaction
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
+                    {message.text && (
+                        <div
+                            className={`mb-4 p-3 rounded ${
+                                message.type === 'error'
+                                    ? 'bg-red-100 text-red-700 border border-red-200'
+                                    : 'bg-green-100 text-green-700 border border-green-200'
+                            }`}
+                        >
+                            {message.text}
+                        </div>
+                    )}
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Date</label>
+                            <label className="text-sm font-medium">Date and Time</label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button
@@ -70,23 +127,18 @@ const ExpenseTrackerForm = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Category</label>
-                            <Select value={category} onValueChange={setCategory}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select category" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {EXPENSE_CATEGORIES.map((cat) => (
-                                        <SelectItem key={cat} value={cat}>
-                                            {cat}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <label className="text-sm font-medium">Description *</label>
+                            <Input
+                                type="text"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="Enter transaction description"
+                                required
+                            />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Amount</label>
+                            <label className="text-sm font-medium">Amount *</label>
                             <div className="relative">
                                 <span className="absolute left-3 top-2.5">$</span>
                                 <Input
@@ -96,8 +148,22 @@ const ExpenseTrackerForm = () => {
                                     className="pl-6"
                                     placeholder="0.00"
                                     step="0.01"
+                                    required
                                 />
                             </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Recurring</label>
+                            <Select value={recurring} onValueChange={setRecurring}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Is this a recurring transaction?" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="false">No</SelectItem>
+                                    <SelectItem value="true">Yes</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </form>
                 </CardContent>
@@ -105,8 +171,9 @@ const ExpenseTrackerForm = () => {
                     <Button
                         className="w-full"
                         onClick={handleSubmit}
+                        disabled={isSubmitting}
                     >
-                        Add Expense
+                        {isSubmitting ? "Adding..." : "Add Transaction"}
                     </Button>
                 </CardFooter>
             </Card>
