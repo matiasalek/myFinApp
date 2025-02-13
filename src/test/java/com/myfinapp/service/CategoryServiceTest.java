@@ -29,7 +29,7 @@ public class CategoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        sampleCategory = new Category(1L, Category.categories.CREDIT_CARD, LocalDateTime.now());
+        sampleCategory = new Category(1L, Category.categories.CREDIT_CARD);
     }
 
     @Test
@@ -52,8 +52,8 @@ public class CategoryServiceTest {
 
     @Test
     void createCategory_ShouldSaveAndReturnCategory() {
-        Category inputCategory = new Category(null, Category.categories.MISC, LocalDateTime.now());
-        Category savedCategory = new Category(1L, Category.categories.MISC, LocalDateTime.now());
+        Category inputCategory = new Category(null, Category.categories.MISC);
+        Category savedCategory = new Category(1L, Category.categories.MISC);
 
         when(categoryRepository.save(any(Category.class))).thenReturn(savedCategory);
 
@@ -66,7 +66,7 @@ public class CategoryServiceTest {
 
     @Test
     void createCategory_WhenAlreadyExists_ShouldThrowException() {
-        Category existingCategory = new Category(1L, Category.categories.MISC, LocalDateTime.now());
+        Category existingCategory = new Category(1L, Category.categories.MISC);
 
         assertThrows(ResourceNotFoundException.class, () -> categoryService.createCategory(existingCategory));
         verify(categoryRepository, never()).save(any(Category.class));
@@ -74,7 +74,7 @@ public class CategoryServiceTest {
 
     @Test
     void updateCategory_ShouldUpdateAndReturnCategory() {
-        Category updatedCategory = new Category(1L, Category.categories.MISC, LocalDateTime.now());
+        Category updatedCategory = new Category(1L, Category.categories.MISC);
 
         when(categoryRepository.existsById(1L)).thenReturn(true);
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(sampleCategory));
@@ -92,7 +92,7 @@ public class CategoryServiceTest {
     void updateCategory_WhenNotFound_ShouldThrowException() {
         when(categoryRepository.existsById(999L)).thenReturn(false);
 
-        Category updatedCategory = new Category(999L, Category.categories.MISC, LocalDateTime.now());
+        Category updatedCategory = new Category(999L, Category.categories.MISC);
 
         assertThrows(ResourceNotFoundException.class, () -> categoryService.updateCategory(999L, updatedCategory));
         verify(categoryRepository, never()).save(any(Category.class));

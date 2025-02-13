@@ -45,7 +45,7 @@ public class CategoryControllerTest {
     @Test
     void getAllCategories_ShouldReturnAllCategories() throws Exception {
         Long categoryId = 1L;
-        Category expectedCategory = new Category(categoryId, MISC, LocalDateTime.now());
+        Category expectedCategory = new Category(categoryId, MISC);
         when(categoryService.getCategoryById(categoryId)).thenReturn(expectedCategory);
 
         mockMvc.perform(get("/api/category/" + categoryId))
@@ -57,8 +57,8 @@ public class CategoryControllerTest {
 
     @Test
     void createCategory_ShouldCreateCategory() throws Exception {
-        Category inputCategory = new Category(null, MISC, LocalDateTime.now());
-        Category expectedNewCategory = new Category(3L, MISC, LocalDateTime.now());
+        Category inputCategory = new Category(null, MISC);
+        Category expectedNewCategory = new Category(3L, MISC);
 
         when(categoryService.createCategory(any(Category.class))).thenReturn(expectedNewCategory);
 
@@ -67,14 +67,13 @@ public class CategoryControllerTest {
                         .content(asJsonString(inputCategory)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(3L))
-                .andExpect(jsonPath("$.name").value(MISC.toString()))
-                .andExpect(jsonPath("$.date").exists());
+                .andExpect(jsonPath("$.name").value(MISC.toString()));
     }
 
     @Test
     void updateCategory_ShouldUpdateCategory() throws Exception {
         Long categoryId = 1L;
-        Category updatedCategory = new Category(categoryId, MISC, LocalDateTime.now());
+        Category updatedCategory = new Category(categoryId, MISC);
         when(categoryService.updateCategory(eq(categoryId), any(Category.class))).thenReturn(updatedCategory);
 
         mockMvc.perform(put("/api/category/" + categoryId)
@@ -82,14 +81,13 @@ public class CategoryControllerTest {
                         .content(asJsonString(updatedCategory)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(categoryId))
-                .andExpect(jsonPath("$.name").value(MISC.toString()))
-                .andExpect(jsonPath("$.date").exists());
+                .andExpect(jsonPath("$.name").value(MISC.toString()));
     }
 
     @Test
     void updateCategory_WhenCategoryNotFound_ShouldReturnNotFound() throws Exception {
         Long categoryId = 999L;
-        Category updatedCategory = new Category(categoryId, MISC,LocalDateTime.now());
+        Category updatedCategory = new Category(categoryId, MISC);
 
         when(categoryService.updateCategory(eq(categoryId), any(Category.class)))
                 .thenThrow(new ResourceNotFoundException("Category not found"));

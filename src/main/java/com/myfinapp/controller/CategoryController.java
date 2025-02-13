@@ -42,12 +42,6 @@ public class CategoryController {
         return ResponseEntity.ok(updatedCategory);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Category> patchCategory(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
-        Category patchedCategory = categoryService.patchCategory(id, updates);
-        return ResponseEntity.ok(patchedCategory);
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
