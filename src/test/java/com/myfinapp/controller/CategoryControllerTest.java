@@ -51,8 +51,7 @@ public class CategoryControllerTest {
         mockMvc.perform(get("/api/category/" + categoryId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(categoryId))
-                .andExpect(jsonPath("$.name").value(MISC.toString()))
-                .andExpect(jsonPath("$.date").exists());
+                .andExpect(jsonPath("$.name").value(MISC.toString()));
     }
 
     @Test

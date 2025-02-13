@@ -49,8 +49,8 @@ public class TransactionControllerTest {
     void getAllTransactions_ShouldReturnAllTransactions() throws Exception {
         Long transactionId = 3L;
         LocalDateTime now = LocalDateTime.now();
-        Category testCategory = new Category(3L, MISC, now);
-        Transaction expectedTransaction = new Transaction(3L, testCategory, "credit card", new BigDecimal("1.1"), now, false, null);
+        Category testCategory = new Category(3L, MISC);
+        Transaction expectedTransaction = new Transaction(3L, testCategory, "credit card", new BigDecimal("1.1"), now, false);
 
 
         when(transactionService.getTransactionById(transactionId))
@@ -64,8 +64,8 @@ public class TransactionControllerTest {
     void createTransaction_ShouldCreateTransaction() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         Long transactionId = 3L;
-        Category testCategory = new Category(3L, MISC, now);
-        Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false, null);
+        Category testCategory = new Category(3L, MISC);
+        Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
 
         when(transactionService.createTransaction(any(Transaction.class))).thenReturn(testTransaction);
 
@@ -79,8 +79,8 @@ public class TransactionControllerTest {
     void updateTransaction_ShouldUpdateTransaction() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         Long transactionId = 3L;
-        Category testCategory = new Category(3L, MISC, now);
-        Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false, null);
+        Category testCategory = new Category(3L, MISC);
+        Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
 
         mockMvc.perform(put("/api/transaction/" + transactionId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -92,8 +92,8 @@ public class TransactionControllerTest {
     void updateTransaction_WhenTransactionNotFound_ShouldReturnNotFound() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         Long transactionId = 3L;
-        Category testCategory = new Category(3L, MISC, now);
-        Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false, null);
+        Category testCategory = new Category(3L, MISC);
+        Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
 
         when(transactionService.updateTransaction(eq(transactionId), any(Transaction.class)))
                 .thenThrow(new ResourceNotFoundException("Transaction not found"));

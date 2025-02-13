@@ -31,9 +31,9 @@ public class TransactionServiceTest {
 
     @BeforeEach
     void setUp() {
-        Category sampleCategory = new Category(1L, Category.categories.CREDIT_CARD, LocalDateTime.now());
+        Category sampleCategory = new Category(1L, Category.categories.CREDIT_CARD);
         sampleTransaction = new Transaction
-                (1L, sampleCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false, null);
+                (1L, sampleCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
     }
 
     @Test
@@ -57,15 +57,15 @@ public class TransactionServiceTest {
     @Test
     void createTransaction_ShouldSaveAndReturnTransaction() {
 
-        Category testCategory = new Category(1L, Category.categories.CREDIT_CARD, LocalDateTime.now());
+        Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
 
 
         Transaction newTransaction = new Transaction
-                (null, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false, null);
+                (null, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
 
 
         Transaction savedTransaction = new Transaction
-                (1L, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false, null);
+                (1L, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
 
         when(transactionRepository.save(any(Transaction.class))).thenReturn(savedTransaction);
 
@@ -79,10 +79,10 @@ public class TransactionServiceTest {
 
     @Test
     void createTransaction_WhenAlreadyExists_ShouldThrowException() {
-        Category testCategory = new Category(1L, Category.categories.CREDIT_CARD, LocalDateTime.now());
+        Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
         Transaction existingTransaction = new Transaction
                 (1L, testCategory, "food",
-                        new BigDecimal("1.10"), LocalDateTime.now(), false, null);
+                        new BigDecimal("1.10"), LocalDateTime.now(), false);
 
 
         assertThrows(ResourceNotFoundException.class, () -> transactionService.createTransaction(existingTransaction));
@@ -91,12 +91,12 @@ public class TransactionServiceTest {
 
     @Test
     void updateTransaction_ShouldUpdateAndReturnTransaction() {
-        Category testCategory = new Category(1L, Category.categories.CREDIT_CARD, LocalDateTime.now());
+        Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
         Transaction updatedTransaction = new Transaction
                 (1L, testCategory, "food",
-                        new BigDecimal("1.10"), LocalDateTime.now(), false, null);
+                        new BigDecimal("1.10"), LocalDateTime.now(), false);
 
-        when(transactionRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findById(1L)).thenReturn(Optional.empty());
         when(transactionRepository.findById(1L)).thenReturn(Optional.of(sampleTransaction));
         when(transactionRepository.save(any(Transaction.class))).thenReturn(updatedTransaction);
 
@@ -110,12 +110,12 @@ public class TransactionServiceTest {
 
     @Test
     void updateTransaction_WhenNotFound_ShouldThrowException() {
-        when(transactionRepository.existsById(999L)).thenReturn(false);
+        when(transactionRepository.findById(999L)).thenReturn(Optional.empty());
 
-        Category testCategory = new Category(null, Category.categories.MISC, LocalDateTime.now());
+        Category testCategory = new Category(null, Category.categories.MISC);
         Transaction updatedTransaction = new Transaction
                 (1L, testCategory, "food",
-                        new BigDecimal("2.10"), LocalDateTime.now(), false, null);
+                        new BigDecimal("2.10"), LocalDateTime.now(), false);
 
         assertThrows(ResourceNotFoundException.class, () -> transactionService.updateTransaction(999L, updatedTransaction));
         verify(transactionRepository, never()).save(any(Transaction.class));
