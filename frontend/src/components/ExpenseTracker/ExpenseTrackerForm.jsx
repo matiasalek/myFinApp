@@ -28,6 +28,7 @@ const ExpenseTrackerForm = () => {
     const [date, setDate] = useState(new Date());
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
+    const [recurring, setRecurring] = useState('false')
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
 
@@ -146,6 +147,20 @@ const ExpenseTrackerForm = () => {
                                 />
                             </div>
                         </div>
+
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Recurring</label>
+                            <Select value={recurring} onValueChange={setRecurring}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Is this a recurring transaction?" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="false">No</SelectItem>
+                                    <SelectItem value="true">Yes</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
                     </form>
                 </CardContent>
                 <CardFooter>
