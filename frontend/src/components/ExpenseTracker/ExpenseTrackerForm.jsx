@@ -23,12 +23,14 @@ import {
 import { Input } from '@/components/components/ui/input';
 import { CalendarIcon } from 'lucide-react';
 import { formatDate } from './utils';
+import { EXPENSE_CATEGORIES } from "@/components/ExpenseTracker/constants.js";
 
 const ExpenseTrackerForm = () => {
     const [date, setDate] = useState(new Date());
+    const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
-    const [recurring, setRecurring] = useState('false')
+    const [recurring, setRecurring] = useState('false');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
 
@@ -39,7 +41,7 @@ const ExpenseTrackerForm = () => {
         setMessage({ text: '', type: '' });
 
         // Basic validation
-        if (!description || !amount) {
+        if (!description || !amount || !category) {
             setMessage({ text: 'Please fill in all fields', type: 'error' });
             return;
         }
@@ -51,6 +53,8 @@ const ExpenseTrackerForm = () => {
                 description,
                 amount: parseFloat(amount),
                 dateTime: date.toISOString(),
+                category: category.toUpperCase().replace(/ /g, '_'),
+                recurring: recurring === 'true'
             };
 
             const response = await fetch('http://localhost:8080/api/transaction', {
@@ -68,6 +72,8 @@ const ExpenseTrackerForm = () => {
             setDescription('');
             setAmount('');
             setDate(new Date());
+            setCategory('');
+            setRecurring('false');
             setMessage({ text: 'Transaction added successfully!', type: 'success' });
         } catch (error) {
             setMessage({ text: 'Failed to add transaction. Please try again.', type: 'error' });
@@ -149,6 +155,22 @@ const ExpenseTrackerForm = () => {
                         </div>
 
                         <div className="space-y-2">
+                            <label className="text-sm font-medium">Category *</label>
+                            <Select value={category} onValueChange={setCategory}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {EXPENSE_CATEGORIES.map((cat) => (
+                                        <SelectItem key={cat} value={cat}>
+                                            {cat}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="space-y-2">
                             <label className="text-sm font-medium">Recurring</label>
                             <Select value={recurring} onValueChange={setRecurring}>
                                 <SelectTrigger className="w-full">
@@ -160,7 +182,6 @@ const ExpenseTrackerForm = () => {
                                 </SelectContent>
                             </Select>
                         </div>
-
                     </form>
                 </CardContent>
                 <CardFooter>

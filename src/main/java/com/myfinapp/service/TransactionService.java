@@ -2,9 +2,7 @@ package com.myfinapp.service;
 
 import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Transaction;
-import com.myfinapp.model.RecurringTransaction;
 import com.myfinapp.repository.TransactionRepository;
-import com.myfinapp.repository.RecurringTransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +15,9 @@ import java.util.Map;
 @Service
 public class TransactionService {
     private final TransactionRepository transactionRepository;
-    private final RecurringTransactionRepository recurringTransactionRepository;
 
-    public TransactionService(TransactionRepository transactionRepository, RecurringTransactionRepository recurringTransactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
-        this.recurringTransactionRepository = recurringTransactionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -39,40 +35,22 @@ public class TransactionService {
         if (transaction.getId() != null) {
             throw new ResourceNotFoundException("Transaction already exists");
         }
-
-        Transaction savedTransaction = transactionRepository.save(transaction);
-
-        if (transaction.isRecurring()) {
-            createRecurringTransaction(savedTransaction);
-        }
-
-        return savedTransaction;
+        return transactionRepository.save(transaction);
     }
 
     public Transaction updateTransaction(Long id, Transaction transactionDetails) {
         return transactionRepository.findById(id).map(transaction -> {
-            boolean wasRecurring = transaction.isRecurring();
-            boolean nowRecurring = transactionDetails.isRecurring();
-
             transaction.setCategory(transactionDetails.getCategory());
             transaction.setDescription(transactionDetails.getDescription());
             transaction.setAmount(transactionDetails.getAmount());
             transaction.setDate(transactionDetails.getDate());
-            transaction.setRecurring(nowRecurring);
-
-            Transaction updatedTransaction = transactionRepository.save(transaction);
-
-            handleRecurringTransactionUpdate(updatedTransaction, wasRecurring, nowRecurring);
-
-            return updatedTransaction;
+            transaction.setRecurring(transactionDetails.getRecurring());
+            return transactionRepository.save(transaction);
         }).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
     }
 
     public Transaction patchTransaction(Long id, Map<String, Object> updates) {
         return transactionRepository.findById(id).map(transaction -> {
-            boolean wasRecurring = transaction.isRecurring();
-            boolean nowRecurring = wasRecurring;
-
             for (Map.Entry<String, Object> entry : updates.entrySet()) {
                 switch (entry.getKey()) {
                     case "description":
@@ -85,16 +63,12 @@ public class TransactionService {
                         transaction.setDate((LocalDateTime) entry.getValue());
                         break;
                     case "recurring":
-                        nowRecurring = (Boolean) entry.getValue();
-                        transaction.setRecurring(nowRecurring);
+                        transaction.setRecurring((Boolean) entry.getValue());
                         break;
                 }
             }
 
-            Transaction updatedTransaction = transactionRepository.save(transaction);
-            handleRecurringTransactionUpdate(updatedTransaction, wasRecurring, nowRecurring);
-
-            return updatedTransaction;
+            return transactionRepository.save(transaction);
         }).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
     }
 
@@ -102,24 +76,6 @@ public class TransactionService {
         if (!transactionRepository.existsById(id)) {
             throw new ResourceNotFoundException("Transaction not found");
         }
-        recurringTransactionRepository.deleteById(id);
         transactionRepository.deleteById(id);
-    }
-
-    private void createRecurringTransaction(Transaction transaction) {
-        RecurringTransaction recurringTransaction = new RecurringTransaction();
-        recurringTransaction.setTransaction(transaction);
-        recurringTransaction.setPaid_date(transaction.getDate());
-        recurringTransaction.setActive(true);
-        recurringTransaction.setCreated_date(LocalDateTime.now());
-        recurringTransactionRepository.save(recurringTransaction);
-    }
-
-    private void handleRecurringTransactionUpdate(Transaction transaction, boolean wasRecurring, boolean nowRecurring) {
-        if (!wasRecurring && nowRecurring) {
-            createRecurringTransaction(transaction);
-        } else if (wasRecurring && !nowRecurring) {
-            recurringTransactionRepository.deleteById(transaction.getId());
-        }
     }
 }
