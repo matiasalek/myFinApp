@@ -3,6 +3,7 @@ package com.myfinapp.service;
 import com.myfinapp.exception.ResourceNotFoundException;
 import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
+import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ public class TransactionServiceTest {
 
     @Mock
     private TransactionRepository transactionRepository;
+
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @InjectMocks
     private TransactionService transactionService;
@@ -56,16 +60,13 @@ public class TransactionServiceTest {
 
     @Test
     void createTransaction_ShouldSaveAndReturnTransaction() {
-
         Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
+        Transaction newTransaction = new Transaction(
+                null, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
+        Transaction savedTransaction = new Transaction(
+                1L, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
 
-
-        Transaction newTransaction = new Transaction
-                (null, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
-
-
-        Transaction savedTransaction = new Transaction
-                (1L, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
+        when(categoryRepository.findByName(testCategory.getName())).thenReturn(Optional.of(testCategory));
 
         when(transactionRepository.save(any(Transaction.class))).thenReturn(savedTransaction);
 
@@ -73,21 +74,43 @@ public class TransactionServiceTest {
 
         assertNotNull(created);
         assertEquals(1L, created.getId());
+        verify(categoryRepository, times(1)).findByName(testCategory.getName());
         verify(transactionRepository, times(1)).save(any(Transaction.class));
     }
 
-
     @Test
-    void createTransaction_WhenAlreadyExists_ShouldThrowException() {
-        Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
-        Transaction existingTransaction = new Transaction
-                (1L, testCategory, "food",
-                        new BigDecimal("1.10"), LocalDateTime.now(), false);
+    void createTransaction_WhenCategoryNotFound_ShouldThrowException() {
+        Category testCategory = new Category(null, Category.categories.CREDIT_CARD);
+        Transaction newTransaction = new Transaction(
+                null, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
 
+        when(categoryRepository.findByName(testCategory.getName())).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> transactionService.createTransaction(existingTransaction));
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            transactionService.createTransaction(newTransaction);
+        });
+
+        assertEquals("Category not found: CREDIT_CARD", exception.getMessage());
+
+        verify(categoryRepository, times(1)).findByName(testCategory.getName());
         verify(transactionRepository, never()).save(any(Transaction.class));
     }
+
+    @Test
+    void createTransaction_WhenTransactionAlreadyHasId_ShouldThrowException() {
+        Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
+        Transaction existingTransaction = new Transaction(
+                1L, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            transactionService.createTransaction(existingTransaction);
+        });
+
+        assertEquals("Transaction already exists", exception.getMessage());
+        verify(transactionRepository, never()).save(any(Transaction.class));
+        verify(categoryRepository, never()).findByName(any()); // Shouldn't even check category if ID exists
+    }
+
 
     @Test
     void updateTransaction_ShouldUpdateAndReturnTransaction() {
