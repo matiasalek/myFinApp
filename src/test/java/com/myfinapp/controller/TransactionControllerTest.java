@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static com.myfinapp.model.Category.categories.OTHER;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +48,7 @@ public class TransactionControllerTest {
     @Test
     void getAllTransactions_ShouldReturnAllTransactions() throws Exception {
         Long transactionId = 3L;
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         Category testCategory = new Category(3L, OTHER);
         Transaction expectedTransaction = new Transaction(3L, testCategory, "credit card", new BigDecimal("1.1"), now, false);
 
@@ -62,7 +62,7 @@ public class TransactionControllerTest {
 
     @Test
     void createTransaction_ShouldCreateTransaction() throws Exception {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         Long transactionId = 3L;
         Category testCategory = new Category(3L, OTHER);
         Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
@@ -77,7 +77,7 @@ public class TransactionControllerTest {
 
     @Test
     void updateTransaction_ShouldUpdateTransaction() throws Exception {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         Long transactionId = 3L;
         Category testCategory = new Category(3L, OTHER);
         Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
@@ -90,7 +90,7 @@ public class TransactionControllerTest {
 
     @Test
     void updateTransaction_WhenTransactionNotFound_ShouldReturnNotFound() throws Exception {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         Long transactionId = 3L;
         Category testCategory = new Category(3L, OTHER);
         Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);

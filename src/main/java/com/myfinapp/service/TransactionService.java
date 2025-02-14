@@ -5,13 +5,15 @@ import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.repository.TransactionRepository;
+import org.springframework.instrument.classloading.ResourceOverridingShadowingClassLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -74,7 +76,7 @@ public class TransactionService {
                         transaction.setAmount((BigDecimal) entry.getValue());
                         break;
                     case "date":
-                        transaction.setDate((LocalDateTime) entry.getValue());
+                        transaction.setDate((LocalDate) entry.getValue());
                         break;
                     case "recurring":
                         transaction.setRecurring((Boolean) entry.getValue());
@@ -91,5 +93,15 @@ public class TransactionService {
             throw new ResourceNotFoundException("Transaction not found");
         }
         transactionRepository.deleteById(id);
+    }
+
+    public BigDecimal getTotalAmountByCategoryAndDateRange(Category.categories categoryName, LocalDate startDate, LocalDate endDate){
+        Optional<Category> category = categoryRepository.findByName(categoryName);
+        if (category.isEmpty()){
+            throw new ResourceNotFoundException("Category not found: " + categoryName);
+        }
+
+        return transactionRepository.sumAmountByCategoryAndDateRange(category.get(), startDate, endDate)
+                .orElse(BigDecimal.ZERO);
     }
 }

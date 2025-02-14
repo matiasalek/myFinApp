@@ -3,7 +3,7 @@ package com.myfinapp.model;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "transactions")
@@ -23,7 +23,7 @@ public class Transaction {
     private BigDecimal amount;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDate date;
 
     @Column(nullable = false)
     private boolean recurring;
@@ -33,7 +33,7 @@ public class Transaction {
     }
 
     // Full constructor for easy testing
-    public Transaction(Long id, Category category, String description, BigDecimal amount, LocalDateTime date, boolean recurring) {
+    public Transaction(Long id, Category category, String description, BigDecimal amount, LocalDate date, boolean recurring) {
         this.id = id;
         this.category = category;
         this.description = description;
@@ -74,11 +74,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

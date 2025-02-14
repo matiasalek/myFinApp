@@ -1,5 +1,6 @@
 package com.myfinapp.controller;
 
+import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.service.TransactionService;
@@ -7,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +34,15 @@ public class TransactionController {
     public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
         Transaction transaction = transactionService.getTransactionById(id);
         return ResponseEntity.ok(transaction);
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<BigDecimal> getTotalByCategoryAndDate(
+            @RequestParam Category.categories category,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+        BigDecimal total = transactionService.getTotalAmountByCategoryAndDateRange(category, startDate, endDate);
+        return ResponseEntity.ok(total);
     }
 
     @PostMapping

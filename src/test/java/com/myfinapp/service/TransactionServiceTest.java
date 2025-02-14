@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,7 +37,7 @@ public class TransactionServiceTest {
     void setUp() {
         Category sampleCategory = new Category(1L, Category.categories.CREDIT_CARD);
         sampleTransaction = new Transaction
-                (1L, sampleCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
+                (1L, sampleCategory, "food", new BigDecimal("1.10"), LocalDate.now(), false);
     }
 
     @Test
@@ -62,9 +62,9 @@ public class TransactionServiceTest {
     void createTransaction_ShouldSaveAndReturnTransaction() {
         Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
         Transaction newTransaction = new Transaction(
-                null, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
+                null, testCategory, "food", new BigDecimal("1.10"), LocalDate.now(), false);
         Transaction savedTransaction = new Transaction(
-                1L, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
+                1L, testCategory, "food", new BigDecimal("1.10"), LocalDate.now(), false);
 
         when(categoryRepository.findByName(testCategory.getName())).thenReturn(Optional.of(testCategory));
 
@@ -82,7 +82,7 @@ public class TransactionServiceTest {
     void createTransaction_WhenCategoryNotFound_ShouldThrowException() {
         Category testCategory = new Category(null, Category.categories.CREDIT_CARD);
         Transaction newTransaction = new Transaction(
-                null, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
+                null, testCategory, "food", new BigDecimal("1.10"), LocalDate.now(), false);
 
         when(categoryRepository.findByName(testCategory.getName())).thenReturn(Optional.empty());
 
@@ -100,7 +100,7 @@ public class TransactionServiceTest {
     void createTransaction_WhenTransactionAlreadyHasId_ShouldThrowException() {
         Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
         Transaction existingTransaction = new Transaction(
-                1L, testCategory, "food", new BigDecimal("1.10"), LocalDateTime.now(), false);
+                1L, testCategory, "food", new BigDecimal("1.10"), LocalDate.now(), false);
 
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             transactionService.createTransaction(existingTransaction);
@@ -117,7 +117,7 @@ public class TransactionServiceTest {
         Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
         Transaction updatedTransaction = new Transaction
                 (1L, testCategory, "food",
-                        new BigDecimal("1.10"), LocalDateTime.now(), false);
+                        new BigDecimal("1.10"), LocalDate.now(), false);
 
         when(transactionRepository.findById(1L)).thenReturn(Optional.empty());
         when(transactionRepository.findById(1L)).thenReturn(Optional.of(sampleTransaction));
@@ -138,7 +138,7 @@ public class TransactionServiceTest {
         Category testCategory = new Category(null, Category.categories.OTHER);
         Transaction updatedTransaction = new Transaction
                 (1L, testCategory, "food",
-                        new BigDecimal("2.10"), LocalDateTime.now(), false);
+                        new BigDecimal("2.10"), LocalDate.now(), false);
 
         assertThrows(ResourceNotFoundException.class, () -> transactionService.updateTransaction(999L, updatedTransaction));
         verify(transactionRepository, never()).save(any(Transaction.class));
