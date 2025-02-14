@@ -112,7 +112,7 @@ public class TransactionServiceTest {
     void updateTransaction_WhenNotFound_ShouldThrowException() {
         when(transactionRepository.findById(999L)).thenReturn(Optional.empty());
 
-        Category testCategory = new Category(null, Category.categories.MISC);
+        Category testCategory = new Category(null, Category.categories.OTHER);
         Transaction updatedTransaction = new Transaction
                 (1L, testCategory, "food",
                         new BigDecimal("2.10"), LocalDateTime.now(), false);

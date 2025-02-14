@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static com.myfinapp.model.Category.categories.MISC;
+import static com.myfinapp.model.Category.categories.OTHER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -49,7 +49,7 @@ public class TransactionControllerTest {
     void getAllTransactions_ShouldReturnAllTransactions() throws Exception {
         Long transactionId = 3L;
         LocalDateTime now = LocalDateTime.now();
-        Category testCategory = new Category(3L, MISC);
+        Category testCategory = new Category(3L, OTHER);
         Transaction expectedTransaction = new Transaction(3L, testCategory, "credit card", new BigDecimal("1.1"), now, false);
 
 
@@ -64,7 +64,7 @@ public class TransactionControllerTest {
     void createTransaction_ShouldCreateTransaction() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         Long transactionId = 3L;
-        Category testCategory = new Category(3L, MISC);
+        Category testCategory = new Category(3L, OTHER);
         Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
 
         when(transactionService.createTransaction(any(Transaction.class))).thenReturn(testTransaction);
@@ -79,7 +79,7 @@ public class TransactionControllerTest {
     void updateTransaction_ShouldUpdateTransaction() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         Long transactionId = 3L;
-        Category testCategory = new Category(3L, MISC);
+        Category testCategory = new Category(3L, OTHER);
         Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
 
         mockMvc.perform(put("/api/transaction/" + transactionId)
@@ -92,7 +92,7 @@ public class TransactionControllerTest {
     void updateTransaction_WhenTransactionNotFound_ShouldReturnNotFound() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         Long transactionId = 3L;
-        Category testCategory = new Category(3L, MISC);
+        Category testCategory = new Category(3L, OTHER);
         Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
 
         when(transactionService.updateTransaction(eq(transactionId), any(Transaction.class)))

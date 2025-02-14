@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,8 +51,8 @@ public class CategoryServiceTest {
 
     @Test
     void createCategory_ShouldSaveAndReturnCategory() {
-        Category inputCategory = new Category(null, Category.categories.MISC);
-        Category savedCategory = new Category(1L, Category.categories.MISC);
+        Category inputCategory = new Category(null, Category.categories.OTHER);
+        Category savedCategory = new Category(1L, Category.categories.OTHER);
 
         when(categoryRepository.save(any(Category.class))).thenReturn(savedCategory);
 
@@ -66,7 +65,7 @@ public class CategoryServiceTest {
 
     @Test
     void createCategory_WhenAlreadyExists_ShouldThrowException() {
-        Category existingCategory = new Category(1L, Category.categories.MISC);
+        Category existingCategory = new Category(1L, Category.categories.OTHER);
 
         assertThrows(ResourceNotFoundException.class, () -> categoryService.createCategory(existingCategory));
         verify(categoryRepository, never()).save(any(Category.class));
@@ -74,7 +73,7 @@ public class CategoryServiceTest {
 
     @Test
     void updateCategory_ShouldUpdateAndReturnCategory() {
-        Category updatedCategory = new Category(1L, Category.categories.MISC);
+        Category updatedCategory = new Category(1L, Category.categories.OTHER);
 
         when(categoryRepository.existsById(1L)).thenReturn(true);
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(sampleCategory));
@@ -84,7 +83,7 @@ public class CategoryServiceTest {
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
-        assertEquals(Category.categories.MISC, result.getName());
+        assertEquals(Category.categories.OTHER, result.getName());
         verify(categoryRepository, times(1)).save(any(Category.class));
     }
 
@@ -92,7 +91,7 @@ public class CategoryServiceTest {
     void updateCategory_WhenNotFound_ShouldThrowException() {
         when(categoryRepository.existsById(999L)).thenReturn(false);
 
-        Category updatedCategory = new Category(999L, Category.categories.MISC);
+        Category updatedCategory = new Category(999L, Category.categories.OTHER);
 
         assertThrows(ResourceNotFoundException.class, () -> categoryService.updateCategory(999L, updatedCategory));
         verify(categoryRepository, never()).save(any(Category.class));

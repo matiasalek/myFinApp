@@ -35,10 +35,6 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) {
-        if (transaction.getCategory() != null && transaction.getCategory().getId() == null) {
-            categoryRepository.save(transaction.getCategory());
-        }
-
         Transaction createdTransaction = transactionService.createTransaction(transaction);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTransaction);
     }

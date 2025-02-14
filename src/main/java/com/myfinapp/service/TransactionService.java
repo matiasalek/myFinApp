@@ -1,8 +1,11 @@
 package com.myfinapp.service;
 
 import com.myfinapp.exception.ResourceNotFoundException;
+import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
+import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.repository.TransactionRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +18,11 @@ import java.util.Map;
 @Service
 public class TransactionService {
     private final TransactionRepository transactionRepository;
+    private final CategoryRepository categoryRepository;
 
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
         this.transactionRepository = transactionRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional(readOnly = true)
@@ -32,9 +37,17 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(Transaction transaction) {
-        if (transaction.getId() != null) {
-            throw new ResourceNotFoundException("Transaction already exists");
+        if (transaction.getCategory() == null || transaction.getCategory().getName() == null) {
+            throw new ResourceNotFoundException("Invalid category");
         }
+
+        // Check if the category exists in DB
+        Category existingCategory = categoryRepository.findByName(transaction.getCategory().getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + transaction.getCategory().getName()));
+
+        // Assign the existing category to the transaction
+        transaction.setCategory(existingCategory);
+
         return transactionRepository.save(transaction);
     }
 

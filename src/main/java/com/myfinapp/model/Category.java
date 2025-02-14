@@ -14,10 +14,11 @@ public class Category {
     private categories name;
 
     public enum categories{
-        MISC,
+        OTHER,
         CREDIT_CARD,
-        RECURRING_TRANSACTION,
-        SAVING
+        RECREATION,
+        SAVING,
+        UNIVERSITY
     }
 
     // Empty constructor for JPA
