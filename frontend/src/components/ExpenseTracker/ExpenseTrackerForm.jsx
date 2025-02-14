@@ -49,8 +49,8 @@ const ExpenseTrackerForm = () => {
         try {
             const transactionData = {
                 description,
-                amount: parseFloat(amount),
-                dateTime: date.toISOString(),
+                amount: amount.toString(),
+                date: date.toISOString().split('T')[0],
                 category: {
                     name: category.toUpperCase().replace(/ /g, '_')
                 },
