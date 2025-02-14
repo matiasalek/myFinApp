@@ -37,10 +37,8 @@ const ExpenseTrackerForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Clear previous messages
         setMessage({ text: '', type: '' });
 
-        // Basic validation
         if (!description || !amount || !category) {
             setMessage({ text: 'Please fill in all fields', type: 'error' });
             return;
@@ -53,7 +51,9 @@ const ExpenseTrackerForm = () => {
                 description,
                 amount: parseFloat(amount),
                 dateTime: date.toISOString(),
-                category: category.toUpperCase().replace(/ /g, '_'),
+                category: {
+                    name: category.toUpperCase().replace(/ /g, '_')
+                },
                 recurring: recurring === 'true'
             };
 
@@ -82,6 +82,7 @@ const ExpenseTrackerForm = () => {
             setIsSubmitting(false);
         }
     };
+
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-50">

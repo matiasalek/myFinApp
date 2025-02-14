@@ -1,6 +1,7 @@
 export const EXPENSE_CATEGORIES = [
-    'Misc',
+    'Other',
     'Credit Card',
-    'Recurring Transactions',
-    'Saving'
+    'Recreation',
+    'Saving',
+    'University'
 ];
