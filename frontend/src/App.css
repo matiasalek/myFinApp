@@ -1,8 +1,9 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+html, css, #root {
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
   text-align: center;
+  overflow: hidden;
 }
 
 .logo {
@@ -34,7 +35,7 @@
 }
 
 .card {
-  padding: 2em;
+  padding: 0;
 }
 
 .read-the-docs {

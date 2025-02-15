@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
-import { Calendar } from '@/components/components/ui/calendar';
-import { Button } from '@/components/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Button } from '@/components/ui/button';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/components/ui/select';
+} from '@/components/ui/select';
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
     CardFooter,
-} from '@/components/components/ui/card';
+} from '@/components/ui/card';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@/components/components/ui/popover';
-import { Input } from '@/components/components/ui/input';
+} from '@/components/ui/popover';
+import { Input } from '@/components/ui/input';
 import { CalendarIcon } from 'lucide-react';
 import { formatDate } from './utils';
 import { EXPENSE_CATEGORIES } from "@/components/ExpenseTracker/constants.js";
