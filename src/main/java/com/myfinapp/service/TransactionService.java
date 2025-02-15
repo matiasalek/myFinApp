@@ -5,7 +5,6 @@ import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.repository.TransactionRepository;
-import org.springframework.instrument.classloading.ResourceOverridingShadowingClassLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
