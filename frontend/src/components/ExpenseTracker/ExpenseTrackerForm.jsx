@@ -32,15 +32,15 @@ const ExpenseTrackerForm = () => {
     const [amount, setAmount] = useState('');
     const [recurring, setRecurring] = useState('false');
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [message, setMessage] = useState({ text: '', type: '' });
+    const [message, setMessage] = useState({text: '', type: ''});
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        setMessage({ text: '', type: '' });
+        setMessage({text: '', type: ''});
 
         if (!description || !amount || !category) {
-            setMessage({ text: 'Please fill in all fields', type: 'error' });
+            setMessage({text: 'Please fill in all fields', type: 'error'});
             return;
         }
 
@@ -74,18 +74,16 @@ const ExpenseTrackerForm = () => {
             setDate(new Date());
             setCategory('');
             setRecurring('false');
-            setMessage({ text: 'Transaction added successfully!', type: 'success' });
+            setMessage({text: 'Transaction added successfully!', type: 'success'});
         } catch (error) {
-            setMessage({ text: 'Failed to add transaction. Please try again.', type: 'error' });
+            setMessage({text: 'Failed to add transaction. Please try again.', type: 'error'});
             console.error('Error:', error);
         } finally {
             setIsSubmitting(false);
         }
     };
-
-
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="flex-1 flex items-center justify-center bg-white-100">
             <Card className="w-full max-w-md mx-4">
                 <CardHeader>
                     <CardTitle className="text-2xl font-medium text-center">
@@ -113,7 +111,7 @@ const ExpenseTrackerForm = () => {
                                         variant="outline"
                                         className="w-full justify-start text-left font-normal"
                                     >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        <CalendarIcon className="mr-2 h-4 w-4"/>
                                         {formatDate(date)}
                                     </Button>
                                 </PopoverTrigger>
@@ -159,7 +157,7 @@ const ExpenseTrackerForm = () => {
                             <label className="text-sm font-medium">Category *</label>
                             <Select value={category} onValueChange={setCategory}>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select category" />
+                                    <SelectValue placeholder="Select category"/>
                                 </SelectTrigger>
                                 <SelectContent>
                                     {EXPENSE_CATEGORIES.map((cat) => (
@@ -175,7 +173,7 @@ const ExpenseTrackerForm = () => {
                             <label className="text-sm font-medium">Recurring</label>
                             <Select value={recurring} onValueChange={setRecurring}>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Is this a recurring transaction?" />
+                                    <SelectValue placeholder="Is this a recurring transaction?"/>
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="false">No</SelectItem>
@@ -197,6 +195,5 @@ const ExpenseTrackerForm = () => {
             </Card>
         </div>
     );
-};
-
-export default ExpenseTrackerForm;
+}
+    export default ExpenseTrackerForm;

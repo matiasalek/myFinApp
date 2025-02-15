@@ -9,7 +9,6 @@ import Home from "./pages/Home.jsx";
 //<Route path="/charts" element={<Charts />} />
 function App() {
     return (
-        <div className="h-screen w-screen flex">
         <Router>
             <Layout>
                 <Routes>
@@ -18,7 +17,6 @@ function App() {
                 </Routes>
             </Layout>
         </Router>
-        </div>
     );
 }
 
