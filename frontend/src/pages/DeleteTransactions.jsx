@@ -14,19 +14,37 @@ const DeleteTransactions = () => {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
+                console.log("Fetching transactions...");
+
                 const response = await fetch(API_URL);
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                console.log(`Response status: ${response.status}`);
+
+                if (!response.ok) {
+                    const errorText = await response.text(); // Get error message from the backend
+                    throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
+                }
+
                 const data = await response.json();
                 console.log("Fetched transactions:", data);
+
                 setTransactions(data);
             } catch (error) {
-                console.error("Error fetching transactions:", error);
+                console.error("Error fetching transactions:", error.message);
             }
         };
 
-        fetchTransactions().catch(console.error);
+        fetchTransactions().catch(error => console.error("Unhandled fetch error:", error));
 
     }, []);
+
+
+    const formatCategory = (category) => {
+        if (!category) return "Uncategorized";
+        return category
+            .toLowerCase()
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+    };
 
 
     const handleFilterChange = (field, value) => {
@@ -44,7 +62,7 @@ const DeleteTransactions = () => {
             const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-            setTransactions((prev) => prev.filter((txn) => txn.id !== id)); // Remove from UI
+            setTransactions((prev) => prev.filter((txn) => txn.id !== id));
         } catch (error) {
             console.error("Error deleting transaction:", error);
         }
@@ -97,22 +115,21 @@ const DeleteTransactions = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {filteredTransactions.length > 0 ? (
+                    {Array.isArray(filteredTransactions) && filteredTransactions.length > 0 ? (
                         filteredTransactions.map((txn) => (
-                            <tr key={txn.id} className="border-b">
-                                <td className="p-2">{txn.date}</td>
-                                <td className="p-2">{txn.description}</td>
-                                <td className="p-2">${txn.amount}</td>
-                                <td className="p-2">{txn.category}</td>
-                                <td className="p-2">
-                                    <Button
-                                        variant="destructive"
-                                        onClick={() => handleDelete(txn.id)}
-                                    >
-                                        Delete
-                                    </Button>
-                                </td>
-                            </tr>
+                            txn && typeof txn === "object" ? (
+                                <tr key={txn.id} className="border-b">
+                                    <td className="p-2">{txn.date || "N/A"}</td>
+                                    <td className="p-2">{txn.description || "N/A"}</td>
+                                    <td className="p-2">${txn.amount ?? 0}</td>
+                                    <td className="p-2">{formatCategory(txn.category?.name) ?? "Uncategorized"}</td>
+                                    <td className="p-2">
+                                        <Button variant="destructive" onClick={() => handleDelete(txn.id)}>
+                                            Delete
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ) : null
                         ))
                     ) : (
                         <tr>
@@ -122,6 +139,7 @@ const DeleteTransactions = () => {
                         </tr>
                     )}
                     </tbody>
+
                 </table>
             </div>
         </div>
