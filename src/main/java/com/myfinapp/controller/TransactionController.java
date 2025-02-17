@@ -61,9 +61,11 @@ public class TransactionController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Transaction> patchTransaction(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        System.out.println("Received PATCH request with updates: " + updates);
         Transaction patchedTransaction = transactionService.patchTransaction(id, updates);
         return ResponseEntity.ok(patchedTransaction);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {

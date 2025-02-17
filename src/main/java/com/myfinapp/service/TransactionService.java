@@ -65,27 +65,67 @@ public class TransactionService {
     }
 
     public Transaction patchTransaction(Long id, Map<String, Object> updates) {
-        return transactionRepository.findById(id).map(transaction -> {
-            for (Map.Entry<String, Object> entry : updates.entrySet()) {
-                switch (entry.getKey()) {
-                    case "description":
-                        transaction.setDescription((String) entry.getValue());
-                        break;
-                    case "amount":
-                        transaction.setAmount((BigDecimal) entry.getValue());
-                        break;
-                    case "date":
-                        transaction.setDate((LocalDate) entry.getValue());
-                        break;
-                    case "recurring":
-                        transaction.setRecurring((Boolean) entry.getValue());
-                        break;
-                }
-            }
+        try {
+            return transactionRepository.findById(id).map(transaction -> {
+                for (Map.Entry<String, Object> entry : updates.entrySet()) {
+                    switch (entry.getKey()) {
+                        case "description":
+                            transaction.setDescription(entry.getValue().toString());
+                            break;
+                        case "amount":
+                            try {
+                                if (entry.getValue() instanceof Number) {
+                                    transaction.setAmount(new BigDecimal(entry.getValue().toString()));
+                                } else if (entry.getValue() instanceof String) {
+                                    transaction.setAmount(new BigDecimal((String) entry.getValue()));
+                                } else {
+                                    throw new IllegalArgumentException("Invalid amount format");
+                                }
+                            } catch (NumberFormatException e) {
+                                throw new IllegalArgumentException("Invalid amount value: " + entry.getValue());
+                            }
+                            break;
+                        case "date":
+                            transaction.setDate(LocalDate.parse(entry.getValue().toString()));
+                            break;
+                        case "recurring":
+                            transaction.setRecurring(Boolean.parseBoolean(entry.getValue().toString()));
+                            break;
+                        case "category":
+                            if (entry.getValue() instanceof Map) {
+                                @SuppressWarnings("unchecked")
+                                Map<String, Object> categoryMap = (Map<String, Object>) entry.getValue();
+                                try {
+                                    String categoryName = categoryMap.get("id").toString()
+                                            .toUpperCase()
+                                            .replace(" ", "_");
 
-            return transactionRepository.save(transaction);
-        }).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+                                    Category.categories enumCategory = Category.categories.valueOf(categoryName);
+                                    Category category = categoryRepository.findByName(enumCategory)
+                                            .orElseThrow(() -> new ResourceNotFoundException("Category not found with name: " + categoryName));
+
+                                    transaction.setCategory(category);
+                                } catch (IllegalArgumentException e) {
+                                    throw new IllegalArgumentException("Invalid category name: " + categoryMap.get("id"));
+                                }
+                            }
+                            break;
+                        case "id":
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Invalid field: " + entry.getKey());
+                    }
+                }
+
+                return transactionRepository.save(transaction);
+            }).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error updating transaction: " + e.getMessage());
+        }
     }
+
+
 
     public void deleteTransaction(Long id) {
         if (!transactionRepository.existsById(id)) {
