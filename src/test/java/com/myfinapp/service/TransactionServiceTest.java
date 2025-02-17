@@ -113,38 +113,6 @@ public class TransactionServiceTest {
 
 
     @Test
-    void updateTransaction_ShouldUpdateAndReturnTransaction() {
-        Category testCategory = new Category(1L, Category.categories.CREDIT_CARD);
-        Transaction updatedTransaction = new Transaction
-                (1L, testCategory, "food",
-                        new BigDecimal("1.10"), LocalDate.now(), false);
-
-        when(transactionRepository.findById(1L)).thenReturn(Optional.empty());
-        when(transactionRepository.findById(1L)).thenReturn(Optional.of(sampleTransaction));
-        when(transactionRepository.save(any(Transaction.class))).thenReturn(updatedTransaction);
-
-        Transaction result = transactionService.updateTransaction(1L, updatedTransaction);
-
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals("food", result.getDescription());
-        verify(transactionRepository, times(1)).save(any(Transaction.class));
-    }
-
-    @Test
-    void updateTransaction_WhenNotFound_ShouldThrowException() {
-        when(transactionRepository.findById(999L)).thenReturn(Optional.empty());
-
-        Category testCategory = new Category(null, Category.categories.OTHER);
-        Transaction updatedTransaction = new Transaction
-                (1L, testCategory, "food",
-                        new BigDecimal("2.10"), LocalDate.now(), false);
-
-        assertThrows(ResourceNotFoundException.class, () -> transactionService.updateTransaction(999L, updatedTransaction));
-        verify(transactionRepository, never()).save(any(Transaction.class));
-    }
-
-    @Test
     void deleteTransaction_ShouldCallRepositoryDelete() {
         when(transactionRepository.existsById(1L)).thenReturn(true);
 

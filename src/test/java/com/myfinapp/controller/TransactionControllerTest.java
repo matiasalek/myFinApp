@@ -22,7 +22,6 @@ import java.time.LocalDate;
 
 import static com.myfinapp.model.Category.categories.OTHER;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -73,36 +72,6 @@ public class TransactionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(testTransaction)))
                 .andExpect(status().isCreated());
-    }
-
-    @Test
-    void updateTransaction_ShouldUpdateTransaction() throws Exception {
-        LocalDate now = LocalDate.now();
-        Long transactionId = 3L;
-        Category testCategory = new Category(3L, OTHER);
-        Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
-
-        mockMvc.perform(put("/api/transaction/" + transactionId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(testTransaction)))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void updateTransaction_WhenTransactionNotFound_ShouldReturnNotFound() throws Exception {
-        LocalDate now = LocalDate.now();
-        Long transactionId = 3L;
-        Category testCategory = new Category(3L, OTHER);
-        Transaction testTransaction = new Transaction(transactionId, testCategory, "credit card", new BigDecimal("1.1"), now, false);
-
-        when(transactionService.updateTransaction(eq(transactionId), any(Transaction.class)))
-                .thenThrow(new ResourceNotFoundException("Transaction not found"));
-
-        mockMvc.perform(put("/api/transaction/" + transactionId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(testTransaction)))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("Transaction not found"));
     }
 
     @Test

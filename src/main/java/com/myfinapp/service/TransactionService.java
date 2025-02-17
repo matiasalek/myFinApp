@@ -14,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -53,17 +52,6 @@ public class TransactionService {
         transaction.setCategory(existingCategory);
 
         return transactionRepository.save(transaction);
-    }
-
-    public Transaction updateTransaction(Long id, Transaction transactionDetails) {
-        return transactionRepository.findById(id).map(transaction -> {
-            transaction.setCategory(transactionDetails.getCategory());
-            transaction.setDescription(transactionDetails.getDescription());
-            transaction.setAmount(transactionDetails.getAmount());
-            transaction.setDate(transactionDetails.getDate());
-            transaction.setRecurring(transactionDetails.getRecurring());
-            return transactionRepository.save(transaction);
-        }).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
     }
 
     public Transaction patchTransaction(Long id, Map<String, Object> updates) {
@@ -161,21 +149,10 @@ public class TransactionService {
         }
     }
 
-
     public void deleteTransaction(Long id) {
         if (!transactionRepository.existsById(id)) {
             throw new ResourceNotFoundException("Transaction not found");
         }
         transactionRepository.deleteById(id);
-    }
-
-    public BigDecimal getTotalAmountByCategoryAndDateRange(Category.categories categoryName, LocalDate startDate, LocalDate endDate){
-        Optional<Category> category = categoryRepository.findByName(categoryName);
-        if (category.isEmpty()){
-            throw new ResourceNotFoundException("Category not found: " + categoryName);
-        }
-
-        return transactionRepository.sumAmountByCategoryAndDateRange(category.get(), startDate, endDate)
-                .orElse(BigDecimal.ZERO);
     }
 }
