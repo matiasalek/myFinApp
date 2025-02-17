@@ -24,7 +24,8 @@ const UpdateTransactions = () => {
                 }
 
                 const data = await response.json();
-                setTransactions(data);
+                const sortedTransactions = data.sort((a, b) => new Date(a.date) - new Date(b.date));
+                setTransactions(sortedTransactions);
             } catch (error) {
                 console.error("Error fetching transactions:", error.message);
             }
@@ -140,9 +141,6 @@ const UpdateTransactions = () => {
                                             }
                                         }}
                                     />
-
-
-
                                 ) : (
                                 txn.date
                             )}</td>

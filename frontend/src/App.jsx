@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import Home from "./pages/Home.jsx";
 import UpdateTransactions from "./pages/UpdateTransactions.jsx"
 import DeleteTransactions from "./pages/DeleteTransactions.jsx";
+import Charts from "./pages/Charts.jsx"
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                     <Route path="/create" element={<ExpenseTrackerForm />} />
                     <Route path="/update" element={<UpdateTransactions />} />
                     <Route path="/delete" element={<DeleteTransactions />} />
+                    <Route path="/charts" element={<Charts />} />
                 </Routes>
             </Layout>
         </Router>
