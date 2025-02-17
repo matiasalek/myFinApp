@@ -51,11 +51,20 @@ const DeleteTransactions = () => {
         setFilters((prevFilters) => ({ ...prevFilters, [field]: value }));
     };
 
-    const filteredTransactions = transactions.filter(txn =>
-        (filters.date ? txn.date.includes(filters.date) : true) &&
-        (filters.category && filters.category !== "all" ? txn.category === filters.category : true) &&
-        (filters.description ? txn.description.toLowerCase().includes(filters.description.toLowerCase()) : true)
-    );
+    const normalizeCategory = (category) => category.toLowerCase().replace(/_/g, " ");
+
+    const filteredTransactions = transactions
+        .filter(txn =>
+            (filters.date ? txn.date.includes(filters.date) : true) &&
+            (filters.category && filters.category !== "all"
+                    ? normalizeCategory(txn.category?.name) === normalizeCategory(filters.category)
+                    : true
+            ) &&
+            (filters.description ? txn.description.toLowerCase().includes(filters.description.toLowerCase()) : true)
+        )
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+
 
     const handleDelete = async (id) => {
         try {
@@ -87,8 +96,8 @@ const DeleteTransactions = () => {
                     <SelectContent>
                         <SelectItem value="all">All</SelectItem>
                         {EXPENSE_CATEGORIES.map((cat) => (
-                            <SelectItem key={cat} value={cat}>
-                                {cat}
+                            <SelectItem key={cat} value={formatCategory(cat)}>
+                                {formatCategory(cat)}
                             </SelectItem>
                         ))}
                     </SelectContent>

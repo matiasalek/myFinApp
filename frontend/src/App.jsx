@@ -12,7 +12,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/create" element={<ExpenseTrackerForm />} />
-                    <Route path="/transactions" element={<DeleteTransactions />} />
+                    <Route path="/delete" element={<DeleteTransactions />} />
                 </Routes>
             </Layout>
         </Router>
