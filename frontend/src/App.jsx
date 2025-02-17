@@ -1,6 +1,6 @@
 import React from 'react';
 import ExpenseTrackerForm from "@/components/ExpenseTracker/ExpenseTrackerForm.jsx";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Layout from "@/components/Layout";
 import Home from "./pages/Home.jsx";
 import UpdateTransactions from "./pages/UpdateTransactions.jsx"

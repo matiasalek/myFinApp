@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { EXPENSE_CATEGORIES } from "@/components/ExpenseTracker/constants.js";
+import React, {useEffect, useState} from "react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {EXPENSE_CATEGORIES} from "@/components/ExpenseTracker/constants.js";
 
 const API_URL = "http://localhost:8080/api/transaction";
 
@@ -10,14 +10,10 @@ const DeleteTransactions = () => {
     const [transactions, setTransactions] = useState([]);
     const [filters, setFilters] = useState({ date: "", category: "", description: "" });
 
-    // Fetch transactions when component mounts
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
-                console.log("Fetching transactions...");
-
                 const response = await fetch(API_URL);
-                console.log(`Response status: ${response.status}`);
 
                 if (!response.ok) {
                     const errorText = await response.text(); // Get error message from the backend
@@ -25,16 +21,12 @@ const DeleteTransactions = () => {
                 }
 
                 const data = await response.json();
-                console.log("Fetched transactions:", data);
-
                 setTransactions(data);
             } catch (error) {
                 console.error("Error fetching transactions:", error.message);
             }
         };
-
         fetchTransactions().catch(error => console.error("Unhandled fetch error:", error));
-
     }, []);
 
 

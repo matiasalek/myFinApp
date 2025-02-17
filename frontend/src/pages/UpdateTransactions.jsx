@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { EXPENSE_CATEGORIES } from "@/components/ExpenseTracker/constants.js";
-import { Pencil, Check } from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {EXPENSE_CATEGORIES} from "@/components/ExpenseTracker/constants.js";
+import {Check, Pencil, X} from "lucide-react";
+import {Calendar} from '@/components/ui/calendar';
+import Switch from "@/components/ui/switch.jsx";
 
 const API_URL = "http://localhost:8080/api/transaction";
 
@@ -15,27 +17,19 @@ const UpdateTransactions = () => {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
-                console.log("Fetching transactions...");
-
                 const response = await fetch(API_URL);
-                console.log(`Response status: ${response.status}`);
-
                 if (!response.ok) {
                     const errorText = await response.text();
                     throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
                 }
 
                 const data = await response.json();
-                console.log("Fetched transactions:", data);
-
                 setTransactions(data);
             } catch (error) {
                 console.error("Error fetching transactions:", error.message);
             }
         };
-
         fetchTransactions().catch(error => console.error("Unhandled fetch error:", error));
-
     }, []);
 
     const formatCategory = (category) => {
@@ -45,32 +39,71 @@ const UpdateTransactions = () => {
 
     const handleEdit = (txn) => {
         setEditingId(txn.id);
-        setEditedTransaction({ ...txn });
+        setEditedTransaction(JSON.parse(JSON.stringify(txn))); // Deep copy
     };
 
     const handleChange = (field, value) => {
-        setEditedTransaction((prev) => ({
-            ...prev,
-            [field]: field === "category" ? { id: value, name: EXPENSE_CATEGORIES.find(cat => cat.toUpperCase() === value) } : value
-        }));
+        if (field === "category") {
+            setEditedTransaction((prev) => ({
+                ...prev,
+                [field]: { id: value, name: EXPENSE_CATEGORIES.find(cat => cat.toUpperCase() === value) }
+            }));
+        } else {
+            setEditedTransaction((prev) => ({
+                ...prev,
+                [field]: value
+            }));
+        }
     };
 
     const handleSave = async () => {
         try {
+            const originalTransaction = transactions.find(t => t.id === editingId);
+
+            const changedFields = {};
+
+            if (editedTransaction.description !== originalTransaction.description) {
+                changedFields.description = editedTransaction.description;
+            }
+
+            if (editedTransaction.amount !== originalTransaction.amount) {
+                changedFields.amount = editedTransaction.amount;
+            }
+
+            if (editedTransaction.date !== originalTransaction.date) {
+                changedFields.date = editedTransaction.date;
+            }
+
+            if (editedTransaction.recurring !== originalTransaction.recurring) {
+                changedFields.recurring = editedTransaction.recurring;
+            }
+
+            if (editedTransaction.category?.id !== originalTransaction.category?.id) {
+                changedFields.category = editedTransaction.category;
+            }
+
             const response = await fetch(`${API_URL}/${editingId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(editedTransaction),
+                body: JSON.stringify(changedFields),
             });
+
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
+
+            const updatedTransaction = await response.json();
             setTransactions((prev) =>
-                prev.map((txn) => (txn.id === editingId ? editedTransaction : txn))
+                prev.map((txn) => (txn.id === editingId ? updatedTransaction : txn))
             );
+
             setEditingId(null);
         } catch (error) {
             console.error("Error updating transaction:", error);
         }
+    };
+
+    const handleCancel = () => {
+        setEditingId(null);
     };
 
     return (
@@ -84,13 +117,37 @@ const UpdateTransactions = () => {
                         <th className="p-2">Description</th>
                         <th className="p-2">Amount</th>
                         <th className="p-2">Category</th>
-                        <th className="p-2">Actions</th>
+                        <th className="p-2">Recurring Transaction</th>
                     </tr>
                     </thead>
                     <tbody>
                     {transactions.map((txn) => (
                         <tr key={txn.id} className="border-b">
-                            <td className="p-2">{txn.date}</td>
+                            <td className="p-2">
+                                {editingId === txn.id ? (
+                                    <Calendar
+                                        mode="single"
+                                        selected={editedTransaction.date ? new Date(editedTransaction.date + "T00:00:00") : undefined}
+                                        onSelect={(date) => {
+                                            if (date) {
+                                                const year = date.getFullYear();
+                                                const month = String(date.getMonth() + 1).padStart(2, '0');
+                                                const day = String(date.getDate()).padStart(2, '0');
+
+                                                const formattedDate = `${year}-${month}-${day}`;
+                                                console.log("Formatted date:", formattedDate);
+
+                                                handleChange("date", formattedDate);
+                                            }
+                                        }}
+                                    />
+
+
+
+                                ) : (
+                                txn.date
+                            )}</td>
+
                             <td className="p-2">
                                 {editingId === txn.id ? (
                                     <Input
@@ -101,6 +158,7 @@ const UpdateTransactions = () => {
                                     txn.description
                                 )}
                             </td>
+
                             <td className="p-2">
                                 {editingId === txn.id ? (
                                     <Input
@@ -112,6 +170,7 @@ const UpdateTransactions = () => {
                                     `$${txn.amount}`
                                 )}
                             </td>
+
                             <td className="p-2">
                                 {editingId === txn.id ? (
                                     <Select onValueChange={(value) => handleChange("category", value)}>
@@ -128,17 +187,35 @@ const UpdateTransactions = () => {
                                     formatCategory(txn.category?.name)
                                 )}
                             </td>
+
                             <td className="p-2">
                                 {editingId === txn.id ? (
+                                    <Switch
+                                        checked={Boolean(editedTransaction.recurring)}
+                                        onCheckedChange={(checked) => handleChange("recurring", checked)}
+                                    />
+                                ) : (
+                                    txn.recurring ? "Yes" : "No"
+                                )}
+                            </td>
+
+                            <td className="p-2 flex gap-2">
+                                {editingId === txn.id ? (
+                                    <>
                                     <Button variant="success" onClick={handleSave}>
                                         <Check size={16} />
                                     </Button>
+                                    <Button variant="destructive" onClick={handleCancel}>
+                                        <X size={16} />
+                                    </Button>
+                                    </>
                                 ) : (
                                     <Button variant="ghost" onClick={() => handleEdit(txn)}>
                                         <Pencil size={16} />
                                     </Button>
                                 )}
                             </td>
+
                         </tr>
                     ))}
                     </tbody>

@@ -1,29 +1,13 @@
-import React, { useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
-import { Button } from '@/components/ui/button';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardFooter,
-} from '@/components/ui/card';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
-import { CalendarIcon } from 'lucide-react';
-import { formatDate } from './utils';
-import { EXPENSE_CATEGORIES } from "@/components/ExpenseTracker/constants.js";
+import React, {useState} from 'react';
+import {Calendar} from '@/components/ui/calendar';
+import {Button} from '@/components/ui/button';
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
+import {Card, CardContent, CardFooter, CardHeader, CardTitle,} from '@/components/ui/card';
+import {Popover, PopoverContent, PopoverTrigger,} from '@/components/ui/popover';
+import {Input} from '@/components/ui/input';
+import {CalendarIcon} from 'lucide-react';
+import {formatDate} from './utils';
+import {EXPENSE_CATEGORIES} from "@/components/ExpenseTracker/constants.js";
 
 const ExpenseTrackerForm = () => {
     const [date, setDate] = useState(new Date());
@@ -77,7 +61,6 @@ const ExpenseTrackerForm = () => {
             setMessage({text: 'Transaction added successfully!', type: 'success'});
         } catch (error) {
             setMessage({text: 'Failed to add transaction. Please try again.', type: 'error'});
-            console.error('Error:', error);
         } finally {
             setIsSubmitting(false);
         }
