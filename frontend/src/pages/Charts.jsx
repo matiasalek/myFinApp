@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.jsx";
-import { getMonth, getYear, format, parseISO } from "date-fns";
+import React, {useEffect, useState} from "react";
+import {Pie} from "react-chartjs-2";
+import {ArcElement, Chart as ChartJS, Legend, Tooltip} from "chart.js";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.jsx";
+import {format, getMonth, getYear, parseISO} from "date-fns";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
