@@ -32,4 +32,3 @@ create table transactions
 
 alter table transactions
     owner to postgres;
-

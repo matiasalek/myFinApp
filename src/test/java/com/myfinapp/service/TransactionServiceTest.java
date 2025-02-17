@@ -108,7 +108,7 @@ public class TransactionServiceTest {
 
         assertEquals("Transaction already exists", exception.getMessage());
         verify(transactionRepository, never()).save(any(Transaction.class));
-        verify(categoryRepository, never()).findByName(any()); // Shouldn't even check category if ID exists
+        verify(categoryRepository, never()).findByName(any());
     }
 
 

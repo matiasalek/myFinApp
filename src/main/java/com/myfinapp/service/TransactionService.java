@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -86,10 +88,44 @@ public class TransactionService {
                             }
                             break;
                         case "date":
-                            transaction.setDate(LocalDate.parse(entry.getValue().toString()));
+                            try {
+                                Object dateValue = entry.getValue();
+                                String dateString = dateValue.toString().trim();
+                                try {
+                                    // Standard ISO format
+                                    if (dateString.contains("T")) {
+                                        dateString = dateString.split("T")[0];
+                                    }
+
+                                    // Basic check for yyyy-MM-dd format
+                                    if (dateString.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                                        transaction.setDate(LocalDate.parse(dateString));
+                                    } else {
+                                        throw new DateTimeParseException("Invalid date format", dateString, 0);
+                                    }
+                                } catch (DateTimeParseException e) {
+                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                                    transaction.setDate(LocalDate.parse(dateString, formatter));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                throw new IllegalArgumentException("Invalid date format: " + entry.getValue() +
+                                        ". Expected format: yyyy-MM-dd. Error: " + e.getMessage());
+                            }
                             break;
                         case "recurring":
-                            transaction.setRecurring(Boolean.parseBoolean(entry.getValue().toString()));
+                            try {
+                                Object value = entry.getValue();
+                                boolean boolValue = switch (value) {
+                                    case Boolean b -> b;
+                                    case String s -> Boolean.parseBoolean(s);
+                                    case Number number -> number.intValue() != 0;
+                                    case null, default -> throw new IllegalArgumentException("Invalid boolean format");
+                                };
+                                transaction.setRecurring(boolValue);
+                            } catch (Exception e) {
+                                throw new IllegalArgumentException("Invalid recurring value: " + entry.getValue());
+                            }
                             break;
                         case "category":
                             if (entry.getValue() instanceof Map) {
@@ -124,7 +160,6 @@ public class TransactionService {
             throw new RuntimeException("Error updating transaction: " + e.getMessage());
         }
     }
-
 
 
     public void deleteTransaction(Long id) {

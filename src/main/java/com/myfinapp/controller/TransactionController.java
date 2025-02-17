@@ -4,12 +4,10 @@ import com.myfinapp.model.Category;
 import com.myfinapp.model.Transaction;
 import com.myfinapp.repository.CategoryRepository;
 import com.myfinapp.service.TransactionService;
-import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.beans.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
