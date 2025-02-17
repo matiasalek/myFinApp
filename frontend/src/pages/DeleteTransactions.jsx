@@ -8,7 +8,7 @@ const API_URL = "http://localhost:8080/api/transaction";
 
 const DeleteTransactions = () => {
     const [transactions, setTransactions] = useState([]);
-    const [filters, setFilters] = useState({ date: "", category: "", description: "" });
+    const [filters, setFilters] = useState({ date: "", category: "", description: ""});
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -112,6 +112,7 @@ const DeleteTransactions = () => {
                         <th className="p-2">Description</th>
                         <th className="p-2">Amount</th>
                         <th className="p-2">Category</th>
+                        <th className="p-2">Recurring Transaction</th>
                         <th className="p-2">Actions</th>
                     </tr>
                     </thead>
@@ -124,6 +125,7 @@ const DeleteTransactions = () => {
                                     <td className="p-2">{txn.description || "N/A"}</td>
                                     <td className="p-2">${txn.amount ?? 0}</td>
                                     <td className="p-2">{formatCategory(txn.category?.name) ?? "Uncategorized"}</td>
+                                    <td className="p-2">{txn.recurring ? "Yes" : "No"}</td>
                                     <td className="p-2">
                                         <Button variant="destructive" onClick={() => handleDelete(txn.id)}>
                                             Delete
