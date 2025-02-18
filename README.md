@@ -29,7 +29,7 @@
 ## **📂 Tech Stack**
 - **Backend:** Java Spring Boot
 - **Frontend:** React (Vite) + JavaScript + Chart.Js
-- **Database:** PostgreSQL 15
+- **Database:** PostgreSQL 17
 - **Containerization:** Docker & Docker Compose
 
 ---
