@@ -1,4 +1,5 @@
 /gradlew text eol=lf
 *.bat text eol=crlf
 *.jar binary
-*.js linguistic-detectable=false
+*.js linguist-detectable=false
+*.jsx linguist-detectable=false
