@@ -7,7 +7,6 @@
 ## **📸 Screenshots**
 <div align="center">
   <img src="screenshots/Home.png" alt="Home Screen"/>
-  <img src="screenshots/Menu.png" alt="Menu"/>
   <img src="screenshots/AddTransaction.png" alt="Add Transaction"/>
   <img src="screenshots/EditTransaction.png" alt="Edit Transaction"/>
   <img src="screenshots/Delete.png" alt="Delete Transaction"/>
