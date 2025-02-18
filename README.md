@@ -4,9 +4,23 @@
 
 ---
 
+## **📸 Screenshots**
+<div align="center">
+  <img src="screenshots/Home.png" alt="Home Screen"/>
+  <img src="screenshots/Menu.png" alt="Menu"/>
+  <img src="screenshots/AddTransaction.png" alt="Add Transaction"/>
+  <img src="screenshots/EditTransaction.png" alt="Edit Transaction"/>
+  <img src="screenshots/Delete.png" alt="Delete Transaction"/>
+  <img src="screenshots/Graphs.png" alt="Graphs"/>
+  <img src="screenshots/Tables.png" alt="Tables"/>
+</div>
+
+---
+
 ## **📜 Features**
 ✅ Track your transactions with categories and recurring status  
 ✅ Simple and clean UI  
+✅ Graphs generated with Chart.Js  
 ✅ Edit transactions with a **date picker**, **toggle for recurrence**, and **manual amount input**  
 ✅ Powered by **Spring Boot + PostgreSQL + React**  
 ✅ **Dockerized setup** – Just run `docker-compose up`!
@@ -15,7 +29,7 @@
 
 ## **📂 Tech Stack**
 - **Backend:** Java Spring Boot
-- **Frontend:** React (Vite) + JavaScript
+- **Frontend:** React (Vite) + JavaScript + Chart.Js
 - **Database:** PostgreSQL 15
 - **Containerization:** Docker & Docker Compose
 
@@ -32,7 +46,7 @@ Make sure you have:
 
 ### **🔹 Clone the Repository**
 ```bash
-git clone https://github.com/matiasalek/myFinApp
+git clone https://github.com/matiasalek/myFinApp.git
 cd myfinapp
 ```
 
@@ -122,6 +136,7 @@ docker-compose up --build
 
 ## **📜 License**
 This project is **open-source** and available under the **MIT License**.
+
 
 ---
 
